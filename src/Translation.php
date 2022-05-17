@@ -17,7 +17,6 @@ use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use bitsoflove\translation\services\PhpMessageSource;
 use bitsoflove\translation\services\TranslationService;
-use bitsoflove\translation\services\ExportService;
 use bitsoflove\translation\services\ImportService;
 
 use yii\base\Event;
@@ -65,7 +64,6 @@ class Translation extends Plugin
             function (RegisterUrlRulesEvent $event) {
                 $event->rules = array_merge($event->rules, [
                     'translation' => 'translation/translation/index',
-                    'translation/test' => 'translation/export/export-csv',
                 ]);
             }
         );
@@ -77,7 +75,6 @@ class Translation extends Plugin
     {
         $this->setComponents([
             'translation' => TranslationService::class,
-            'export' => ExportService::class,
             'import' => ImportService::class,
         ]);
     }

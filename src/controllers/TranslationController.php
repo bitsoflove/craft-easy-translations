@@ -13,13 +13,10 @@ namespace bitsoflove\translation\controllers;
 
 
 use Craft;
-use ReflectionClass;
 use craft\web\Controller;
 use craft\web\Response;
 use craft\web\View;
 use bitsoflove\translation\Translation;
-use bitsoflove\translation\elements\db\TranslateQuery;
-use bitsoflove\translation\services\PhpMessageSource;
 
 /**
  *
@@ -51,16 +48,5 @@ class TranslationController extends Controller
         Translation::getInstance()->translation->save($translations, $siteId);
 
         return $this->redirectToPostedUrl();
-        // return $this->asJson(['data' => $translations, 'siteId' => $siteId]);
-    }
-
-    public function actionTest(): Response
-    {
-        $category = 'site';
-        $language = 'nl';
-
-        // $translations = Translation::getInstance()->translation->getTranslations($category, $language);
-
-        return $this->asJson([]);
     }
 }
