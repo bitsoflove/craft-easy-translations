@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -13,6 +14,7 @@ namespace bitsoflove\translation\records;
 use craft\db\ActiveRecord;
 use bitsoflove\translation\Constants;
 use bitsoflove\translation\records\TranslationRecord;
+
 /**
  *
  * @author    bitsoflove

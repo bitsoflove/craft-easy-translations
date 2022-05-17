@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -25,7 +26,7 @@ use bitsoflove\translation\Translation;
 class ExportController extends Controller
 {
     // redundant and unused for now since there is an exporter defined for the custom Translate element
-    public function actionExportCsv() : Response
+    public function actionExportCsv(): Response
     {
         $this->requireCpRequest();
         $this->requirePostRequest();
@@ -35,7 +36,7 @@ class ExportController extends Controller
 
         $translations = Translation::getInstance()->translation->getTranslations('site', $language);
 
-        $filePath = Craft::$app->getPath()->getTempPath() . DIRECTORY_SEPARATOR . 'translations_'. $language . '.csv';
+        $filePath = Craft::$app->getPath()->getTempPath() . DIRECTORY_SEPARATOR . 'translations_' . $language . '.csv';
         $file = fopen($filePath, "w");
 
         $csvHeader = array(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -10,14 +11,10 @@
 
 namespace bitsoflove\translation\services;
 
-use bitsoflove\translation\Translation;
-
 use Craft;
 use craft\base\Component;
 use craft\helpers\FileHelper;
 use craft\helpers\ElementHelper;
-use craft\db\Query;
-use bitsoflove\translation\Constants;
 use bitsoflove\translation\records\TranslationRecord;
 use bitsoflove\translation\records\SourceRecord;
 use bitsoflove\translation\elements\Translate;
@@ -76,7 +73,7 @@ class TranslationService extends Component
             if ($isDir) {
                 $options = [
                     'recursive' => true,
-                    'only' => ['*.php','*.html','*.twig','*.js','*.json','*.atom','*.rss'],
+                    'only' => ['*.php', '*.html', '*.twig', '*.js', '*.json', '*.atom', '*.rss'],
                     'except' => ['vendor/', 'node_modules/']
                 ];
 
@@ -115,18 +112,18 @@ class TranslationService extends Component
                     $translateId = ElementHelper::generateSlug($source);
 
                     if (array_key_exists($source, $currentTranslations)) {
-                        $translation = Craft::t($category, $source, null, $language);                        
-    
+                        $translation = Craft::t($category, $source, null, $language);
+
                         $field = $view->renderTemplate('_includes/forms/text', [
                             'id' => $translateId,
-                            'name' => 'translation['.$source.']',
+                            'name' => 'translation[' . $source . ']',
                             'value' => $translation,
                             'placeholder' => $translation,
                         ]);
                     } else {
                         $field = $view->renderTemplate('_includes/forms/text', [
                             'id' => $translateId,
-                            'name' => 'translation['.$source.']',
+                            'name' => 'translation[' . $source . ']',
                             'value' => '',
                             'placeholder' => '',
                         ]);
@@ -139,11 +136,11 @@ class TranslationService extends Component
                         'translation' => $field,
                         'path' => $path,
                     ]);
-   
+
                     if ($query->search && !stristr($element->source, $query->search) && !stristr($element->translation, $query->search)) {
                         continue;
                     }
-                    
+
                     $translations[$element->source] = $element;
                 }
             }
@@ -162,7 +159,7 @@ class TranslationService extends Component
         // In case you want more than just template files
         $options = [
             'recursive' => true,
-            'only' => ['*.php','*.html','*.twig'],
+            'only' => ['*.php', '*.html', '*.twig'],
             'except' => ['vendor/', 'node_modules/']
         ];
 
@@ -177,18 +174,19 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getStaticTranslations($category, $language) {
+    public function getStaticTranslations($category, $language)
+    {
         $file = $this->getSitePath($language, $category);
         $translations = [];
 
-        if ($current = @include($file)) { 
+        if ($current = @include($file)) {
             $translations = array_merge($current, $translations);
         }
 
         return $translations;
     }
 
-    public function getDbTranslations($category, $language) 
+    public function getDbTranslations($category, $language)
     {
         $result = SourceRecord::find()
             ->select(['message', 'translation'])
@@ -207,7 +205,8 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getTranslations($category, $language) {
+    public function getTranslations($category, $language)
+    {
         $templateTranslations = $this->getTemplateTranslations($category, $language);
 
         $translations = $this->getCurrentTranslations($category, $language);
@@ -221,7 +220,8 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function getCurrentTranslations($category, $language) {
+    private function getCurrentTranslations($category, $language)
+    {
         $staticTranslations = $this->getStaticTranslations($category, $language);
         $dbTranslations = $this->getDbTranslations($category, $language);
 
@@ -255,10 +255,10 @@ class TranslationService extends Component
     public function save($translations, $siteId, $category = 'site')
     {
         $language = Craft::$app->getSites()->getSiteById($siteId)->language;
-        
+
         foreach ($translations as $source => $translation) {
             $oldSource = SourceRecord::findOne(['category' => $category, 'message' => $source]);
-    
+
             if ($oldSource == null) {
                 $oldSource = new SourceRecord;
                 $oldSource->message = $source;
@@ -293,7 +293,7 @@ class TranslationService extends Component
     public function getSitePath($locale, $category)
     {
         $sitePath = Craft::$app->getPath()->getSiteTranslationsPath();
-        $file = $sitePath.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$category.'.php';
+        $file = $sitePath . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $category . '.php';
 
         return $file;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -10,10 +11,9 @@
 
 namespace bitsoflove\translation\services;
 
-use bitsoflove\translation\Translation;
-
 use Craft;
 use craft\base\Component;
+use craft\helpers\FileHelper;
 
 /**
  * @author    bitsoflove
@@ -25,8 +25,8 @@ class ExportService extends Component
     public function overwriteTranslationFile($locale, array $translations)
     {
         $file = $this->getSitePath($locale);
-        
-        if ($current = @include($file)) { 
+
+        if ($current = @include($file)) {
             $translations = array_merge($current, $translations);
         }
 
@@ -43,15 +43,15 @@ class ExportService extends Component
 
         try {
             FileHelper::writeToFile($file, $phpFile);
-        }catch (\Throwable $e) {
-            throw new \Exception(Craft::t('translation','Something went wrong while saving your translations: '.$e->getMessage()));
+        } catch (\Throwable $e) {
+            throw new \Exception(Craft::t('translation', 'Something went wrong while saving your translations: ' . $e->getMessage()));
         }
-    }    
+    }
 
     public function getSitePath($locale, $category = 'site')
     {
         $sitePath = Craft::$app->getPath()->getSiteTranslationsPath();
-        $file = $sitePath.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$category.'.php';
+        $file = $sitePath . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $category . '.php';
 
         return $file;
     }

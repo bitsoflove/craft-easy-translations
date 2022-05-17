@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -12,7 +13,6 @@ namespace bitsoflove\translation\models;
 
 use bitsoflove\translation\Translation;
 
-use Craft;
 use craft\base\Model;
 
 /**

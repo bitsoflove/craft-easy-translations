@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -12,12 +13,9 @@ namespace bitsoflove\translation;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use bitsoflove\translation\services\PhpMessageSource;
-use bitsoflove\translation\services\SourceService;
 use bitsoflove\translation\services\TranslationService;
 use bitsoflove\translation\services\ExportService;
 use bitsoflove\translation\services\ImportService;
@@ -75,7 +73,8 @@ class Translation extends Plugin
         $this->initTranslations();
     }
 
-    private function registerServices() {
+    private function registerServices()
+    {
         $this->setComponents([
             'translation' => TranslationService::class,
             'export' => ExportService::class,

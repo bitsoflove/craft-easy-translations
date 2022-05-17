@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -10,9 +11,6 @@
 
 namespace bitsoflove\translation\services;
 
-use bitsoflove\translation\Translation;
-
-use Craft;
 use craft\base\Component;
 
 /**
@@ -22,7 +20,8 @@ use craft\base\Component;
  */
 class ImportService extends Component
 {
-    public function extractTranslationsFromFile($path) {
+    public function extractTranslationsFromFile($path)
+    {
         $translations = [];
         $handle = fopen($path, 'r');
 

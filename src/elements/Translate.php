@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -45,7 +46,7 @@ class Translate extends Element
      */
     public function __toString()
     {
-        try{
+        try {
             return $this->source;
         } catch (\Exception $e) {
             ErrorHandler::convertExceptionToError($e);
@@ -80,7 +81,7 @@ class Translate extends Element
     {
         $attributes['source'] = ['label' => Craft::t('translation', 'Source')];
 
-        $attributes['translation'] = ['label' => Craft::t('translation','Translation')];
+        $attributes['translation'] = ['label' => Craft::t('translation', 'Translation')];
 
         return $attributes;
     }
@@ -163,19 +164,19 @@ class Translate extends Element
 
         $options = [
             'recursive' => false,
-            'only' => ['*.html','*.twig','*.js','*.json','*.atom','*.rss'],
+            'only' => ['*.html', '*.twig', '*.js', '*.json', '*.atom', '*.rss'],
             'except' => ['vendor/', 'node_modules/']
         ];
 
         $files = FileHelper::findFiles($path, $options);
-        
+
         foreach ($files as $template) {
             $fileName = basename($template);
-            
+
             $cleanTemplateKey = str_replace('/', '*', $template);
-            $templateSources['templatessources:'.$fileName] = [
+            $templateSources['templatessources:' . $fileName] = [
                 'label' => $fileName,
-                'key' => 'templates:'.$cleanTemplateKey,
+                'key' => 'templates:' . $cleanTemplateKey,
                 'criteria' => [
                     'path' => [
                         $template
@@ -190,17 +191,17 @@ class Translate extends Element
         ];
 
         $directories = FileHelper::findDirectories($path, $options);
-        
+
         foreach ($directories as $template) {
             $fileName = basename($template);
-            
+
             $cleanTemplateKey = str_replace('/', '*', $template);
 
             $nestedSources = self::getTemplateSource($template);
 
-            $templateSources['templatessources:'.$fileName] = [
-                'label' => $fileName.'/',
-                'key' => 'templates:'.$cleanTemplateKey,
+            $templateSources['templatessources:' . $fileName] = [
+                'label' => $fileName . '/',
+                'key' => 'templates:' . $cleanTemplateKey,
                 'criteria' => [
                     'path' => [
                         $template
@@ -229,10 +230,10 @@ class Translate extends Element
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
         $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-        $trans = 'Translation: '.ucfirst($lang->displayName);
-        array_walk_recursive($attributes, function(&$attributes) use($trans) {
-            if($attributes == 'Translation') {
-                $attributes= $trans;
+        $trans = 'Translation: ' . ucfirst($lang->displayName);
+        array_walk_recursive($attributes, function (&$attributes) use ($trans) {
+            if ($attributes == 'Translation') {
+                $attributes = $trans;
             }
         });
 
@@ -248,7 +249,7 @@ class Translate extends Element
         Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%');");
         Craft::$app->view->registerJs("$('.buttons.hidden').removeClass('hidden');");
 
-        $template = '_elements/'.$viewState['mode'].'view/'.($includeContainer ? 'container' : 'elements');
+        $template = '_elements/' . $viewState['mode'] . 'view/' . ($includeContainer ? 'container' : 'elements');
 
         return Craft::$app->view->renderTemplate($template, $variables);
     }

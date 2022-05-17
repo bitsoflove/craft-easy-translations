@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -10,11 +11,10 @@
 
 namespace bitsoflove\translation\migrations;
 
-use bitsoflove\translation\Translation;
-
 use Craft;
 use craft\db\Migration;
 use bitsoflove\translation\Constants;
+
 /**
  * Translation Install Migration
  *
@@ -61,7 +61,7 @@ class Install extends Migration
         $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_SOURCE);
         if ($tableSchema === null) {
             $tablesCreated = true;
-    
+
             $this->createTable(Constants::TABLE_SOURCE, [
                 'id' => $this->primaryKey(),
                 'category' => $this->string()->defaultValue('site'),
@@ -71,7 +71,7 @@ class Install extends Migration
                 'uid' => $this->uid(),
             ]);
         }
-        
+
         $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_TRANSLATION);
         if ($tableSchema === null) {
             $tablesCreated = true;

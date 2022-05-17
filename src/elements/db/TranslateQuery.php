@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -11,7 +12,6 @@
 namespace bitsoflove\translation\elements\db;
 
 use craft\elements\db\ElementQuery;
-use craft\helpers\Db;
 
 class TranslateQuery extends ElementQuery
 {

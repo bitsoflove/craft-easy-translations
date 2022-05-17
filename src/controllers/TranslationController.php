@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -60,6 +61,6 @@ class TranslationController extends Controller
 
         // $translations = Translation::getInstance()->translation->getTranslations($category, $language);
 
-        return $this->asJson(['data' => $translations]);
+        return $this->asJson([]);
     }
 }

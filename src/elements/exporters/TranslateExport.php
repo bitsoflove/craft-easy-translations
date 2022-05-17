@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -11,9 +12,7 @@
 namespace bitsoflove\translation\elements\exporters;
 
 use Craft;
-use craft\base\EagerLoadingFieldInterface;
 use craft\base\ElementExporter;
-use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use bitsoflove\translation\Translation;
 
