@@ -4,6 +4,6 @@ namespace bitsoflove\translation;
 
 class Constants
 {
-    const TABLE_SOURCE = '{{%bitsoflove_translation_sources}}';
-    const TABLE_TRANSLATION = '{{%bitsoflove_translation_translations}}';
+    const TABLE_SOURCES = '{{%bitsoflove_translation_sources}}';
+    const TABLE_TRANSLATIONS = '{{%bitsoflove_translation_translations}}';
 }

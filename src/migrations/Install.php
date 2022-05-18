@@ -58,27 +58,27 @@ class Install extends Migration
     {
         $tablesCreated = false;
 
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_SOURCE);
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_SOURCES);
         if ($tableSchema === null) {
             $tablesCreated = true;
 
-            $this->createTable(Constants::TABLE_SOURCE, [
+            $this->createTable(Constants::TABLE_SOURCES, [
                 'id' => $this->primaryKey(),
                 'category' => $this->string()->defaultValue('site'),
-                'message' => $this->text(),
+                'message' => $this->text()->notNull(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
             ]);
         }
 
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_TRANSLATION);
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_TRANSLATIONS);
         if ($tableSchema === null) {
             $tablesCreated = true;
 
-            $this->createTable(Constants::TABLE_TRANSLATION, [
+            $this->createTable(Constants::TABLE_TRANSLATIONS, [
                 'id' => $this->integer()->notNull(),
-                'language' => $this->string(),
+                'language' => $this->string()->notNull(),
                 'translation' => $this->text(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -86,7 +86,7 @@ class Install extends Migration
             ]);
         }
 
-        $this->addPrimaryKey(null, Constants::TABLE_TRANSLATION, ['id', 'language']);
+        $this->addPrimaryKey(null, Constants::TABLE_TRANSLATIONS, ['id', 'language']);
 
         return $tablesCreated;
     }
@@ -95,13 +95,13 @@ class Install extends Migration
     {
         $this->createIndex(
             null,
-            Constants::TABLE_SOURCE,
+            Constants::TABLE_SOURCES,
             'category',
             false
         );
         $this->createIndex(
             null,
-            Constants::TABLE_TRANSLATION,
+            Constants::TABLE_TRANSLATIONS,
             ['id', 'language'],
             true
         );
@@ -111,9 +111,9 @@ class Install extends Migration
     {
         $this->addForeignKey(
             'fk_message_source_message',
-            Constants::TABLE_TRANSLATION,
+            Constants::TABLE_TRANSLATIONS,
             ['id'],
-            Constants::TABLE_SOURCE,
+            Constants::TABLE_SOURCES,
             ['id'],
             'CASCADE',
             'RESTRICT'
@@ -122,15 +122,15 @@ class Install extends Migration
 
     protected function removeForeignKeys()
     {
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_TRANSLATION);
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Constants::TABLE_TRANSLATIONS);
         if ($tableSchema !== null) {
-            $this->dropForeignKey('fk_message_source_message', Constants::TABLE_TRANSLATION);
+            $this->dropForeignKey('fk_message_source_message', Constants::TABLE_TRANSLATIONS);
         }
     }
 
     protected function removeTables()
     {
-        $this->dropTableIfExists(Constants::TABLE_SOURCE);
-        $this->dropTableIfExists(Constants::TABLE_TRANSLATION);
+        $this->dropTableIfExists(Constants::TABLE_SOURCES);
+        $this->dropTableIfExists(Constants::TABLE_TRANSLATIONS);
     }
 }

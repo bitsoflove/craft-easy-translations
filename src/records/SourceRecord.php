@@ -25,7 +25,7 @@ class SourceRecord extends ActiveRecord
 {
     public static function tableName()
     {
-        return Constants::TABLE_SOURCE;
+        return Constants::TABLE_SOURCES;
     }
 
     public function getTranslationRecord()

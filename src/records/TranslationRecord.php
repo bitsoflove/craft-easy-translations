@@ -25,7 +25,7 @@ class TranslationRecord extends ActiveRecord
 {
     public static function tableName()
     {
-        return Constants::TABLE_TRANSLATION;
+        return Constants::TABLE_TRANSLATIONS;
     }
 
     public function getSource()
