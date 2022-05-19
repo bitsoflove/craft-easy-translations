@@ -234,7 +234,6 @@ class Translate extends Element
         }
 
         $elements = Translation::$plugin->translation->getTemplateTranslationsByQuery($elementQuery);
-        count($elements);
 
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);

@@ -122,7 +122,7 @@ class TranslationService extends Component
         return array_slice($translations, $query->offset, $query->limit);
     }
 
-    private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category, $language, &$elementId, $currentTranslations)
+    private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category = 'site', $language, &$elementId, $currentTranslations)
     {
         $translations = [];
         $contents = file_get_contents($file);
@@ -193,7 +193,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getStaticTranslations($category, $language)
+    public function getStaticTranslations($category = 'site', $language)
     {
         $file = $this->getSitePath($language, $category);
         $translations = [];
@@ -205,7 +205,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getDbTranslations($category, $language)
+    public function getDbTranslations($category = 'site', $language)
     {
         $result = SourceRecord::find()
             ->select(['message', 'translation'])
@@ -224,23 +224,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getTranslations($category, $language)
-    {
-        $templateTranslations = $this->getTemplateTranslations($category, $language);
-
-        $translations = $this->getCurrentTranslations($category, $language);
-
-        // Adds sources found in template but not in db or static
-        foreach (array_keys($templateTranslations) as $source) {
-            if (!array_key_exists($source, $translations)) {
-                $translations[$source] = '';
-            }
-        }
-
-        return $translations;
-    }
-
-    private function getCurrentTranslations($category, $language)
+    private function getCurrentTranslations($category = 'site', $language)
     {
         $staticTranslations = $this->getStaticTranslations($category, $language);
         $dbTranslations = $this->getDbTranslations($category, $language);
@@ -250,7 +234,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function processTemplate($file, $language, $category)
+    private function processTemplate($file, $language, $category = 'site')
     {
         $translations = [];
         $contents = file_get_contents($file);
@@ -310,7 +294,7 @@ class TranslationService extends Component
         }
     }
 
-    public function getSitePath($locale, $category)
+    public function getSitePath($locale, $category = 'site')
     {
         $sitePath = Craft::$app->getPath()->getSiteTranslationsPath();
         $file = $sitePath . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $category . '.php';

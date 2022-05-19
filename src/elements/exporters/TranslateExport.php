@@ -28,12 +28,21 @@ class TranslateExport extends ElementExporter
         $results = [];
 
         $language = Craft::$app->getSites()->getSiteById($query->siteId)->language;
-        $elements = Translation::$plugin->translation->getTranslations('site', $language);
+        
+        if (empty($query->orderBy)) {
+            if (isset($viewState['order']) && isset($viewState['sort'])) {
+                $query->orderBy = [$viewState['order'] => $viewState['sort']];
+            } else {
+                $query->orderBy = ['source' => 'asc'];
+            }
+        }
+
+        $elements = Translation::$plugin->translation->getTemplateTranslationsByQuery($query);
 
         foreach ($elements as $source => $translation) {
             $results[] = [
                 'source' => $source ?? '',
-                $language => $translation ?? '',
+                $language => $translation->translation ?? '',
             ];
         }
 
