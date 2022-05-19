@@ -11,7 +11,7 @@ class PhpMessageSource extends craft\i18n\PhpMessageSource
     {
         $translations = parent::loadMessages($category, $language);
 
-        $dbTranslations = Translation::getInstance()->translation->getDbTranslations($category, $language);
+        $dbTranslations = Translation::$plugin->translation->getDbTranslations($category, $language);
 
         $translations = array_merge($translations, $dbTranslations);
 

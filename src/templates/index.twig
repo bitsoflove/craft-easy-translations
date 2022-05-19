@@ -16,13 +16,19 @@
 {% extends "_layouts/elementindex" %}
 {% import "_includes/forms" as forms %}
 {% set elementType = 'bitsoflove\\translation\\elements\\Translate' %}
+{% set elementInstance = craft.app.elements.createElement(elementType) %}
 
 {% do view.registerAssetBundle("bitsoflove\\translation\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
 {% set title = "Translate" %}
-{% set context = 'index' %}
 
 {% set sites = craft.app.sites.getAllSites() %}
 {% set primarySite = craft.app.sites.primarySite %}
+
+{% block toolbar %}
+
+{{ parent() }}
+
+{% endblock %}
 
 {% block actionButton %}
     <div class="btngroup">
@@ -80,7 +86,10 @@
 
         <input type="hidden" class="translation-site-id" name="siteId" value="{{ primarySite.id }}">
         
-        {{ parent() }}   
+        <div class="main">
+            <div class="elements">
+            </div>
+        </div>
     </form>
 
     <form method="post" id="import-form" enctype="multipart/form-data">
@@ -93,4 +102,8 @@
 {% endblock %}
 
 {% block footer %}
+<div class="flex pagination">
+    <div class="page-link prev-page" title="Previous Page"></div>
+    <div class="page-link next-page" title="Next Page"></div>
+</div>
 {% endblock %}

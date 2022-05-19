@@ -20,7 +20,6 @@ class TranslateQuery extends ElementQuery
     // =========================================================================
     public $id;
     public $path;
-    public $translateId;
 
     /**
      * @inheritdoc

@@ -18,7 +18,6 @@ use craft\web\ErrorHandler;
 use bitsoflove\translation\elements\db\TranslateQuery;
 use bitsoflove\translation\elements\exporters\TranslateExport;
 use bitsoflove\translation\Translation;
-use bitsoflove\translation\Constants;
 use craft\helpers\FileHelper;
 
 class Translate extends Element
@@ -28,6 +27,7 @@ class Translate extends Element
     public $translation;
     public $path;
     public $siteId;
+    public $field;
 
     /**
      * Return element type name.
@@ -81,7 +81,7 @@ class Translate extends Element
     {
         $attributes['source'] = ['label' => Craft::t('translation', 'Source')];
 
-        $attributes['translation'] = ['label' => Craft::t('translation', 'Translation')];
+        $attributes['field'] = ['label' => Craft::t('translation', 'Translation')];
 
         return $attributes;
     }
@@ -95,7 +95,7 @@ class Translate extends Element
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        return ['source', 'translation'];
+        return ['source', 'field'];
     }
 
     /**
@@ -117,7 +117,7 @@ class Translate extends Element
     {
         return [
             'source',
-            'translation',
+            'field',
         ];
     }
 
@@ -125,7 +125,7 @@ class Translate extends Element
     {
         return [
             'source' => Craft::t('app', 'Source'),
-            'translation' => Craft::t('app', 'Translation'),
+            'field' => Craft::t('app', 'Translation'),
         ];
     }
 
@@ -225,7 +225,16 @@ class Translate extends Element
             $elementQuery->siteId = $primarySite->id;
         }
 
-        $elements = Translation::getInstance()->translation->getTemplateTranslationsByQuery($elementQuery);
+        if (empty($elementQuery->orderBy)) {
+            if (isset($viewState['order']) && isset($viewState['sort'])) {
+                $elementQuery->orderBy = [$viewState['order'] => $viewState['sort']];
+            } else {
+                $elementQuery->orderBy = ['source' => 'asc'];
+            }
+        }
+
+        $elements = Translation::$plugin->translation->getTemplateTranslationsByQuery($elementQuery);
+        count($elements);
 
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
@@ -247,17 +256,9 @@ class Translate extends Element
         ];
 
         Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%');");
-        Craft::$app->view->registerJs("$('.buttons.hidden').removeClass('hidden');");
 
         $template = '_elements/' . $viewState['mode'] . 'view/' . ($includeContainer ? 'container' : 'elements');
 
         return Craft::$app->view->renderTemplate($template, $variables);
-    }
-
-    public function getLocale()
-    {
-        $site = Craft::$app->getSites()->getSiteById($this->siteId);
-
-        return $site->language;
     }
 }

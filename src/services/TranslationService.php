@@ -93,7 +93,35 @@ class TranslationService extends Component
             }
         }
 
+        $translations = $this->filterTranslations($translations, $query);
+
         return $translations;
+    }
+
+    private function filterTranslations($translations, $query) {
+        $sort = $query->orderBy;
+
+        if (array_key_first($sort) == 'source') {
+            if (array_values($sort)[0] == 'asc') {
+                ksort($translations, 10);
+            } else {
+                krsort($translations, 10);
+            }
+        } else {
+            if (array_values($sort)[0] == 'asc') {
+                usort($translations, function($a, $b)
+                {
+                    return strcasecmp($a->translation, $b->translation);
+                });
+            } else {
+                usort($translations, function($a, $b)
+                {
+                    return strcasecmp($b->translation, $a->translation);
+                });
+            }
+        }
+
+        return array_slice($translations, $query->offset, $query->limit);
     }
 
     private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category, $language, &$elementIdAsInt, $currentTranslations)
@@ -113,27 +141,23 @@ class TranslationService extends Component
 
                     if (array_key_exists($source, $currentTranslations)) {
                         $translation = Craft::t($category, $source, null, $language);
-
-                        $field = $view->renderTemplate('_includes/forms/text', [
-                            'id' => $translateId,
-                            'name' => 'translation[' . $source . ']',
-                            'value' => $translation,
-                            'placeholder' => $translation,
-                        ]);
                     } else {
-                        $field = $view->renderTemplate('_includes/forms/text', [
-                            'id' => $translateId,
-                            'name' => 'translation[' . $source . ']',
-                            'value' => '',
-                            'placeholder' => '',
-                        ]);
+                        $translation = '';
                     }
+
+                    $field = $view->renderTemplate('_includes/forms/text', [
+                        'id' => $translateId,
+                        'name' => 'translation[' . $source . ']',
+                        'value' => $translation,
+                        'placeholder' => $translation,
+                    ]);
 
                     $element = new Translate([
                         'id' => $elementIdAsInt,
                         'translateId' => $translateId,
                         'source' => $source,
-                        'translation' => $field,
+                        'translation' => $translation,
+                        'field' => $field,
                         'path' => $path,
                     ]);
 
@@ -211,7 +235,8 @@ class TranslationService extends Component
 
         $translations = $this->getCurrentTranslations($category, $language);
 
-        foreach ($templateTranslations as $source => $translation) {
+        // Adds sources found in template but not in db or static
+        foreach (array_keys($templateTranslations) as $source) {
             if (!array_key_exists($source, $translations)) {
                 $translations[$source] = '';
             }

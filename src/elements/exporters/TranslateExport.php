@@ -28,7 +28,7 @@ class TranslateExport extends ElementExporter
         $results = [];
 
         $language = Craft::$app->getSites()->getSiteById($query->siteId)->language;
-        $elements = $translations = Translation::getInstance()->translation->getTranslations('site', $language);
+        $elements = Translation::$plugin->translation->getTranslations('site', $language);
 
         foreach ($elements as $source => $translation) {
             $results[] = [

@@ -42,14 +42,14 @@ class ImportController extends Controller
                 $path = Craft::$app->getPath()->getTempAssetUploadsPath() . DIRECTORY_SEPARATOR . $csvFile->name;
                 $csvFile->saveAs($path);
                 
-                [$headerLanguage, $translations] = Translation::getInstance()->import->extractTranslationsFromFile($path);
+                [$headerLanguage, $translations] = Translation::$plugin->import->extractTranslationsFromFile($path);
 
                 if ($translations) {
                     if ($headerLanguage === $language) {
                         $total = count($translations);
                     
                         // Save translations 
-                        Translation::getInstance()->translation->save($translations, $siteId);
+                        Translation::$plugin->translation->save($translations, $siteId);
         
                         Craft::$app->getSession()->setNotice(Craft::t('translation', $total . ' translations were imported succesfully'));
                     } else {
