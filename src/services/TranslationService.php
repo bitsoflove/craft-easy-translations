@@ -33,8 +33,9 @@ class TranslationService extends Component
     {
         parent::init();
 
+        // Only twig, php and html files
         $this->_expressions = [
-            // Regex for Craft::t('category', '..')
+            // Craft::t('category', '..')
             'php' => [
                 'matchPosition' => 3,
                 'regex' => [
@@ -43,7 +44,7 @@ class TranslationService extends Component
                 ]
             ],
 
-            // Regex for |t('category')
+            //  '...'|t('category')
             'twig' => [
                 'matchPosition' => 1,
                 'regex' => [
@@ -63,17 +64,15 @@ class TranslationService extends Component
         }
 
         $translations = [];
+        $elementId = 0;
         $language = Craft::$app->getSites()->getSiteById($query->siteId)->language;
         $currentTranslations = $this->getCurrentTranslations($category, $language);
 
-        $elementIdAsInt = 0;
         foreach ($query->path as $path) {
-            $isDir = is_dir($path);
-
-            if ($isDir) {
+            if (is_dir($path)) {
                 $options = [
                     'recursive' => true,
-                    'only' => ['*.php', '*.html', '*.twig', '*.js', '*.json', '*.atom', '*.rss'],
+                    'only' => ['*.php', '*.html', '*.twig'],
                     'except' => ['vendor/', 'node_modules/']
                 ];
 
@@ -81,13 +80,13 @@ class TranslationService extends Component
 
                 foreach ($files as $file) {
 
-                    $elements = $this->processTemplateByQuery($path, $file, $query, $category, $language, $elementIdAsInt, $currentTranslations);
+                    $elements = $this->processTemplateByQuery($path, $file, $query, $category, $language, $elementId, $currentTranslations);
 
                     $translations = array_merge($translations, $elements);
                 }
             } elseif (file_exists($path)) {
 
-                $elements = $this->processTemplateByQuery($path, $path, $query, $category, $language, $elementIdAsInt, $currentTranslations);
+                $elements = $this->processTemplateByQuery($path, $path, $query, $category, $language, $elementId, $currentTranslations);
 
                 $translations = array_merge($translations, $elements);
             }
@@ -98,7 +97,8 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function filterTranslations($translations, $query) {
+    private function filterTranslations($translations, $query)
+    {
         $sort = $query->orderBy;
 
         if (array_key_first($sort) == 'source') {
@@ -109,13 +109,11 @@ class TranslationService extends Component
             }
         } else {
             if (array_values($sort)[0] == 'asc') {
-                usort($translations, function($a, $b)
-                {
+                usort($translations, function ($a, $b) {
                     return strcasecmp($a->translation, $b->translation);
                 });
             } else {
-                usort($translations, function($a, $b)
-                {
+                usort($translations, function ($a, $b) {
                     return strcasecmp($b->translation, $a->translation);
                 });
             }
@@ -124,19 +122,18 @@ class TranslationService extends Component
         return array_slice($translations, $query->offset, $query->limit);
     }
 
-    private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category, $language, &$elementIdAsInt, $currentTranslations)
+    private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category, $language, &$elementId, $currentTranslations)
     {
-        $translations = array();
+        $translations = [];
         $contents = file_get_contents($file);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
 
-        $fileOptions = $this->_expressions[$extension];
-        foreach ($fileOptions['regex'] as $regex) {
+        $expressions = $this->_expressions[$extension];
+        foreach ($expressions['regex'] as $regex) {
             if (preg_match_all($regex, $contents, $matches)) {
-                $matchPosition = $fileOptions['matchPosition'];
+                $matchPosition = $expressions['matchPosition'];
                 foreach ($matches[$matchPosition] as $source) {
-                    $view = Craft::$app->getView();
-                    $elementIdAsInt++;
+                    $elementId++;
                     $translateId = ElementHelper::generateSlug($source);
 
                     if (array_key_exists($source, $currentTranslations)) {
@@ -145,7 +142,7 @@ class TranslationService extends Component
                         $translation = '';
                     }
 
-                    $field = $view->renderTemplate('_includes/forms/text', [
+                    $field = Craft::$app->getView()->renderTemplate('_includes/forms/text', [
                         'id' => $translateId,
                         'name' => 'translation[' . $source . ']',
                         'value' => $translation,
@@ -153,7 +150,7 @@ class TranslationService extends Component
                     ]);
 
                     $element = new Translate([
-                        'id' => $elementIdAsInt,
+                        'id' => $elementId,
                         'translateId' => $translateId,
                         'source' => $source,
                         'translation' => $translation,
@@ -177,10 +174,8 @@ class TranslationService extends Component
     {
         $translations = [];
 
-        // Only search in Templates folder
         $path = Craft::$app->path->getSiteTemplatesPath();
 
-        // In case you want more than just template files
         $options = [
             'recursive' => true,
             'only' => ['*.php', '*.html', '*.twig'],
@@ -257,7 +252,7 @@ class TranslationService extends Component
 
     private function processTemplate($file, $language, $category)
     {
-        $translations = array();
+        $translations = [];
         $contents = file_get_contents($file);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
 

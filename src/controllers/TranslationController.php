@@ -45,7 +45,13 @@ class TranslationController extends Controller
         $translations = Craft::$app->request->getRequiredBodyParam('translation');
         $siteId = Craft::$app->request->getRequiredBodyParam('siteId');
 
-        Translation::$plugin->translation->save($translations, $siteId);
+        try {
+            Translation::$plugin->translation->save($translations, $siteId);
+
+            Craft::$app->getSession()->setNotice(Craft::t('translation', 'Translations were saved succesfully'));
+        } catch (\Exception $e) {
+            Craft::$app->getSession()->setError(Craft::t('translation', 'Something went wrong while saving the translations'));
+        }
 
         return $this->redirectToPostedUrl();
     }

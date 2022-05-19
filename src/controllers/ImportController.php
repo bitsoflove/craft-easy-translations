@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation plugin for Craft CMS 3.x
  *
@@ -25,7 +26,7 @@ use bitsoflove\translation\Translation;
  */
 class ImportController extends Controller
 {
-    public function actionImportCsv() : Response
+    public function actionImportCsv(): Response
     {
         $this->requireCpRequest();
         $this->requirePostRequest();
@@ -41,21 +42,20 @@ class ImportController extends Controller
             try {
                 $path = Craft::$app->getPath()->getTempAssetUploadsPath() . DIRECTORY_SEPARATOR . $csvFile->name;
                 $csvFile->saveAs($path);
-                
+
                 [$headerLanguage, $translations] = Translation::$plugin->import->extractTranslationsFromFile($path);
 
                 if ($translations) {
                     if ($headerLanguage === $language) {
                         $total = count($translations);
-                    
+
                         // Save translations 
                         Translation::$plugin->translation->save($translations, $siteId);
-        
+
                         Craft::$app->getSession()->setNotice(Craft::t('translation', $total . ' translations were imported succesfully'));
                     } else {
                         Craft::$app->getSession()->setError(Craft::t('translation', 'The language of the translations does not match the current site'));
                     }
-                    
                 } else {
                     Craft::$app->getSession()->setError(Craft::t('translation', 'No translations found in uploaded file'));
                 }
