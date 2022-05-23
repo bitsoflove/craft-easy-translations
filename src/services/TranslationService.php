@@ -119,7 +119,7 @@ class TranslationService extends Component
             }
         }
 
-        return array_slice($translations, $query->offset, $query->limit);
+        return $translations;
     }
 
     private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category = 'site', $language, &$elementId, $currentTranslations)

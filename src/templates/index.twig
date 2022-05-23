@@ -24,12 +24,6 @@
 {% set sites = craft.app.sites.getAllSites() %}
 {% set primarySite = craft.app.sites.primarySite %}
 
-{% block toolbar %}
-
-{{ parent() }}
-
-{% endblock %}
-
 {% block actionButton %}
     <div class="btngroup">
         <input type="submit" class="btn submit" id="save-button" value="{{ 'Save' | t('translations') }}">
@@ -102,8 +96,4 @@
 {% endblock %}
 
 {% block footer %}
-<div class="flex pagination">
-    <div class="page-link prev-page" title="Previous Page"></div>
-    <div class="page-link next-page" title="Next Page"></div>
-</div>
 {% endblock %}

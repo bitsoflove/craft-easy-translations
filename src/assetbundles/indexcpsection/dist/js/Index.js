@@ -19,9 +19,9 @@ function init() {
         document.querySelectorAll(".translation-site-ids").forEach(a => {a.addEventListener("click", setSiteId)});
     });
 
-    document.querySelector('#import-button').addEventListener("click", handleImport);
-    document.querySelector('#save-button').addEventListener("click", handleSave);
-    document.querySelector('#save-shortcut-button').addEventListener("click", handleSave);
+    document.querySelector("#import-button").addEventListener("click", handleImport);
+    document.querySelector("#save-button").addEventListener("click", handleSave);
+    document.querySelector("#save-shortcut-button").addEventListener("click", handleSave);
 }
 
 function setSiteId() {
