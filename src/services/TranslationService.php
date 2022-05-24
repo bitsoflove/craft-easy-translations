@@ -57,7 +57,20 @@ class TranslationService extends Component
         $this->_expressions['html'] = $this->_expressions['twig'];
     }
 
-    public function getTemplateTranslationsByQuery(ElementQueryInterface $query, $category = 'site')
+    public function getTranslationsByQuery(ElementQueryInterface $query)
+    {
+        if (!empty($query->path)) {
+            $translations = $this->getTemplateTranslations($query);
+        } else {
+            $translations = $this->getCategoryTranslations($query);
+        }
+
+        $translations = $this->filterTranslations($translations, $query);
+        
+        return $translations;
+    }
+
+    private function getTemplateTranslations(ElementQueryInterface $query)
     {
         if (!is_array($query->path)) {
             $query->path = [$query->path];
@@ -66,7 +79,7 @@ class TranslationService extends Component
         $translations = [];
         $elementId = 0;
         $language = Craft::$app->getSites()->getSiteById($query->siteId)->language;
-        $currentTranslations = $this->getCurrentTranslations($category, $language);
+        $currentTranslations = $this->getCurrentTranslations($query->category, $language);
 
         foreach ($query->path as $path) {
             if (is_dir($path)) {
@@ -80,19 +93,17 @@ class TranslationService extends Component
 
                 foreach ($files as $file) {
 
-                    $elements = $this->processTemplateByQuery($path, $file, $query, $category, $language, $elementId, $currentTranslations);
+                    $elements = $this->processTemplate($file, $query, $language, $elementId, $currentTranslations);
 
                     $translations = array_merge($translations, $elements);
                 }
             } elseif (file_exists($path)) {
 
-                $elements = $this->processTemplateByQuery($path, $path, $query, $category, $language, $elementId, $currentTranslations);
+                $elements = $this->processTemplate($path, $query, $language, $elementId, $currentTranslations);
 
                 $translations = array_merge($translations, $elements);
             }
         }
-
-        $translations = $this->filterTranslations($translations, $query);
 
         return $translations;
     }
@@ -122,41 +133,26 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function processTemplateByQuery($path, $file, ElementQueryInterface $query, $category = 'site', $language, &$elementId, $currentTranslations)
+    private function processTemplate($file, ElementQueryInterface $query, $language, &$elementId, $currentTranslations)
     {
         $translations = [];
         $contents = file_get_contents($file);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
-
         $expressions = $this->_expressions[$extension];
+
         foreach ($expressions['regex'] as $regex) {
             if (preg_match_all($regex, $contents, $matches)) {
                 $matchPosition = $expressions['matchPosition'];
                 foreach ($matches[$matchPosition] as $source) {
                     $elementId++;
-                    $translateId = ElementHelper::generateSlug($source);
-
+                    
                     if (array_key_exists($source, $currentTranslations)) {
-                        $translation = Craft::t($category, $source, null, $language);
+                        $translation = Craft::t($query->category, $source, null, $language);
                     } else {
                         $translation = '';
                     }
 
-                    $field = Craft::$app->getView()->renderTemplate('_includes/forms/text', [
-                        'id' => $translateId,
-                        'name' => 'translation[' . $source . ']',
-                        'value' => $translation,
-                        'placeholder' => $translation,
-                    ]);
-
-                    $element = new Translate([
-                        'id' => $elementId,
-                        'translateId' => $translateId,
-                        'source' => $source,
-                        'translation' => $translation,
-                        'field' => $field,
-                        'path' => $path,
-                    ]);
+                    $element = $this->createTranslateElement($source, $translation, $elementId);
 
                     if ($query->search && !stristr($element->source, $query->search) && !stristr($element->translation, $query->search)) {
                         continue;
@@ -170,24 +166,45 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getTemplateTranslations($category = 'site', $language)
+    private function createTranslateElement($source, $translation, $elementId) 
     {
+        $translateId = ElementHelper::generateSlug($source);
+
+        $field = Craft::$app->getView()->renderTemplate('_includes/forms/text', [
+            'id' => $translateId,
+            'name' => 'translation[' . $source . ']',
+            'value' => $translation,
+            'placeholder' => $translation,
+        ]);
+
+        $element = new Translate([
+            'id' => $elementId,
+            'translateId' => $translateId,
+            'source' => $source,
+            'translation' => $translation,
+            'field' => $field,
+        ]);
+
+        return $element;
+    }
+
+    public function getCategoryTranslations(ElementQueryInterface $query)
+    {
+        $language = Craft::$app->getSites()->getSiteById($query->siteId)->language;
+        $currentTranslations = $this->getCurrentTranslations($query->category, $language);
+        $elementId = 0;
         $translations = [];
 
-        $path = Craft::$app->path->getSiteTemplatesPath();
+        foreach ($currentTranslations as $source => $translation) {
+            $elementId++;
 
-        $options = [
-            'recursive' => true,
-            'only' => ['*.php', '*.html', '*.twig'],
-            'except' => ['vendor/', 'node_modules/']
-        ];
+            $element = $this->createTranslateElement($source, $translation, $elementId);
+    
+            if ($query->search && !stristr($element->source, $query->search) && !stristr($element->translation, $query->search)) {
+                continue;
+            }
 
-        $files = FileHelper::findFiles($path, $options);
-
-        foreach ($files as $file) {
-            $occurences = $this->processTemplate($file, $language, $category);
-
-            $translations = array_merge($translations, $occurences);
+            $translations[$element->source] = $element;
         }
 
         return $translations;
@@ -234,28 +251,6 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function processTemplate($file, $language, $category = 'site')
-    {
-        $translations = [];
-        $contents = file_get_contents($file);
-        $extension = pathinfo($file, PATHINFO_EXTENSION);
-
-        $fileOptions = $this->_expressions[$extension];
-        foreach ($fileOptions['regex'] as $regex) {
-            if (preg_match_all($regex, $contents, $matches)) {
-                $matchPosition = $fileOptions['matchPosition'];
-
-                foreach ($matches[$matchPosition] as $source) {
-                    $translation = Craft::t($category, $source, null, $language);
-
-                    $translations[$source] = $translation;
-                }
-            }
-        }
-
-        return $translations;
-    }
-
     public function save($translations, $siteId, $category = 'site')
     {
         $language = Craft::$app->getSites()->getSiteById($siteId)->language;
@@ -265,6 +260,7 @@ class TranslationService extends Component
 
             if ($oldSource == null) {
                 $oldSource = new SourceRecord;
+                $oldSource->category = $category;
                 $oldSource->message = $source;
                 $oldSource->insert();
             }

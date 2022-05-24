@@ -84,7 +84,21 @@ class Translation extends Plugin
     {
         $i18n = Craft::$app->getComponents(false)['i18n'];
 
-        $i18n->translations['site']['class'] = PhpMessageSource::class;
+        foreach ($i18n->translations as $key => $source) {
+            if (is_array($i18n->translations[$key])) {
+                $i18n->translations[$key]['class'] = PhpMessageSource::class;
+            } else {
+                $i18n->translations[$key] = [
+                    'class' => PhpMessageSource::class,
+                    'sourceLanguage' => $i18n->translations[$key]->sourceLanguage,
+                    'basePath' => $i18n->translations[$key]->basePath,
+                    'forceTranslation' => $i18n->translations[$key]->forceTranslation,
+                    'allowOverrides' => $i18n->translations[$key]->allowOverrides,
+                ];
+            }
+
+            Craft::info($i18n->translations[$key], __METHOD__);
+        }
 
         Craft::$app->setComponents(
             [

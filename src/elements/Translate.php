@@ -28,6 +28,7 @@ class Translate extends Element
     public $path;
     public $siteId;
     public $field;
+    public $category;
 
     /**
      * Return element type name.
@@ -124,8 +125,8 @@ class Translate extends Element
     protected static function defineSortOptions(): array
     {
         return [
-            'source' => Craft::t('app', 'Source'),
-            'field' => Craft::t('app', 'Translation'),
+            'source' => Craft::t('translation', 'Source'),
+            'field' => Craft::t('translation', 'Translation'),
         ];
     }
 
@@ -142,23 +143,51 @@ class Translate extends Element
     {
         $sources = [];
 
-        $templateSources = self::getTemplateSource(Craft::$app->path->getSiteTemplatesPath());
-
+        $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
+        $sources[] = ['heading' => Craft::t('translation','Template Path')];
+        
         $sources[] = [
             'label'    => Craft::t('translation', 'All Templates'),
-            'key'      => 'all-templates:',
+            'key'      => 'templates:',
             'criteria' => [
                 'path' => [
                     Craft::$app->path->getSiteTemplatesPath()
-                ]
+                ],
+                'category' => 'site'
             ],
             'nested' => $templateSources
         ];
 
+        $sources[] = ['heading' => Craft::t('translation','Category')];
+
+        $language = Craft::$app->getSites()->getPrimarySite()->language;
+
+        $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $language;
+
+        $options = [
+            'recursive' => false,
+            'only' => ['*.php'],
+            'except' => ['vendor/', 'node_modules/']
+        ];
+
+        $files = FileHelper::findFiles($siteTranslationsPath, $options);
+
+        foreach ($files as $categoryFile) {
+            $fileName = substr(basename($categoryFile), 0, -4);
+
+            $sources['categoriessources:' . $fileName] = [
+                'label' => ucfirst($fileName),
+                'key' => 'categories:' . $fileName,
+                'criteria' => [
+                    'category' => $fileName
+                ]
+            ];
+        }
+
         return $sources;
     }
 
-    private static function getTemplateSource($path)
+    private static function getTemplateSources($path)
     {
         $templateSources = [];
 
@@ -181,6 +210,7 @@ class Translate extends Element
                     'path' => [
                         $template
                     ],
+                    'category' => 'site'
                 ],
             ];
         }
@@ -197,7 +227,7 @@ class Translate extends Element
 
             $cleanTemplateKey = str_replace('/', '*', $template);
 
-            $nestedSources = self::getTemplateSource($template);
+            $nestedSources = self::getTemplateSources($template);
 
             $templateSources['templatessources:' . $fileName] = [
                 'label' => $fileName . '/',
@@ -206,6 +236,7 @@ class Translate extends Element
                     'path' => [
                         $template
                     ],
+                    'category' => 'site'
                 ],
                 'nested' => $nestedSources,
             ];
@@ -233,7 +264,7 @@ class Translate extends Element
             }
         }
 
-        $elements = Translation::$plugin->translation->getTemplateTranslationsByQuery($elementQuery);
+        $elements = Translation::$plugin->translation->getTranslationsByQuery($elementQuery);
 
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
