@@ -53,5 +53,7 @@ function handleImport() {
 }
 
 function handleSave() {
-    document.querySelector("#translation-form").submit();
+    const form = document.querySelector("#translation-form");
+    const submitFormFunction = Object.getPrototypeOf(form).submit;
+    submitFormFunction.call(form);
 }
