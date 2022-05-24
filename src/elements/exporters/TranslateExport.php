@@ -37,7 +37,7 @@ class TranslateExport extends ElementExporter
             }
         }
 
-        $elements = Translation::$plugin->translation->getTemplateTranslationsByQuery($query);
+        $elements = Translation::$plugin->translation->getTranslations($query);
 
         foreach ($elements as $source => $translation) {
             $results[] = [

@@ -264,7 +264,7 @@ class Translate extends Element
             }
         }
 
-        $elements = Translation::$plugin->translation->getTranslationsByQuery($elementQuery);
+        $elements = Translation::$plugin->translation->getTranslations($elementQuery);
 
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);

@@ -57,7 +57,7 @@ class TranslationService extends Component
         $this->_expressions['html'] = $this->_expressions['twig'];
     }
 
-    public function getTranslationsByQuery(ElementQueryInterface $query)
+    public function getTranslations(ElementQueryInterface $query)
     {
         if (!empty($query->path)) {
             $translations = $this->getTemplateTranslations($query);
