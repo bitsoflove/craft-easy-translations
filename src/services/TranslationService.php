@@ -210,7 +210,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getStaticTranslations($category = 'site', $language)
+    public function getStaticTranslations($category, $language)
     {
         $file = $this->getSitePath($language, $category);
         $translations = [];
@@ -222,7 +222,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function getDbTranslations($category = 'site', $language)
+    public function getDbTranslations($category, $language)
     {
         $result = SourceRecord::find()
             ->select(['message', 'translation'])
@@ -241,7 +241,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function getCurrentTranslations($category = 'site', $language)
+    private function getCurrentTranslations($category, $language)
     {
         $staticTranslations = $this->getStaticTranslations($category, $language);
         $dbTranslations = $this->getDbTranslations($category, $language);
@@ -251,7 +251,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    public function save($translations, $siteId, $category = 'site')
+    public function save($translations, $siteId, $category)
     {
         $language = Craft::$app->getSites()->getSiteById($siteId)->language;
 
@@ -290,7 +290,7 @@ class TranslationService extends Component
         }
     }
 
-    public function getSitePath($locale, $category = 'site')
+    public function getSitePath($locale, $category)
     {
         $sitePath = Craft::$app->getPath()->getSiteTranslationsPath();
         $file = $sitePath . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $category . '.php';
