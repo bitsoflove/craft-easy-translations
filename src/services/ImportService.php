@@ -26,14 +26,19 @@ class ImportService extends Component
         $handle = fopen($path, 'r');
 
         while (($row = fgetcsv($handle)) !== false) {
-            if (isset($row[0]) && isset($row[1])) {
-                $translations[$row[0]] = $row[1];
+            if (!array_key_exists($row[0], $translations)) {
+                $translations[$row[0]] = [];
+            }
+            if (isset($row[1]) && isset($row[2])) {
+                $translationsByCategory = $translations[$row[0]];
+                $translationsByCategory[$row[1]] = $row[2];
+                $translations[$row[0]] = $translationsByCategory;
             }
         }
         fclose($handle);
 
-        // Remove first line (header)
-        $headerLanguage = array_shift($translations);
+        // Remove first line (header) and get language
+        $headerLanguage = array_values(array_shift($translations))[0];
 
         return [$headerLanguage, $translations];
     }

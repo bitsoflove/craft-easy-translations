@@ -43,14 +43,16 @@ class ImportController extends Controller
                 $path = Craft::$app->getPath()->getTempAssetUploadsPath() . DIRECTORY_SEPARATOR . $csvFile->name;
                 $csvFile->saveAs($path);
 
-                [$headerLanguage, $translations] = Translation::$plugin->import->extractTranslationsFromFile($path);
+                [$headerLanguage, $translationsByCategory] = Translation::$plugin->import->extractTranslationsFromFile($path);
 
-                if ($translations) {
+                if ($translationsByCategory) {
                     if ($headerLanguage === $language) {
-                        $total = count($translations);
-
-                        // Save translations 
-                        Translation::$plugin->translation->save($translations, $siteId);
+                        $total = 0;
+                        
+                        foreach ($translationsByCategory as $category => $translations) {
+                            Translation::$plugin->translation->save($translations, $siteId, $category);
+                            $total += count($translations);
+                        }
 
                         Craft::$app->getSession()->setNotice(Craft::t('translation', $total . ' translations were imported succesfully'));
                     } else {

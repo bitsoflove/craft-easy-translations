@@ -41,6 +41,7 @@ class TranslateExport extends ElementExporter
 
         foreach ($elements as $source => $translation) {
             $results[] = [
+                'category' => $query->category,
                 'source' => $source ?? '',
                 $language => $translation->translation ?? '',
             ];
