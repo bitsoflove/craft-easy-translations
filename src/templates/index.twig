@@ -36,16 +36,23 @@
     </div>
 {% endblock %}
 
+{% block toolbar %}
+    {% include '_elements/toolbar' with {
+        showSiteMenu: false,
+        context: null
+    } %}
+{% endblock %}
+
 {% block contextMenu %}
-    <button type="button" id="site-button" class="btn menubtn sitemenubtn" data-site-id="{{ primarySite.id }}" data-icon="world" tabindex="0">{{ primarySite.name }}</button>
+    <button type="button" id="site-button" class="btn menubtn sitemenubtn" data-site-id="{{ primarySite.id }}" data-icon="world" tabindex="0">{{ primarySite.name ~ " (" ~ primarySite.language ~ ")" }}</button>
     <div class="menu">
         {% for site in sites %}
             <ul class="padded">
                 <li>
                     {% if site.id == primarySite.id %}
-                        <a data-site-id="{{ site.id }}" class="sel translation-site-ids">{{ site.name }}</a>
+                        <a data-site-id="{{ site.id }}" class="sel translation-site-ids">{{ site.name ~ " (" ~ site.language ~ ")" }}</a>
                     {% else %}
-                        <a data-site-id="{{ site.id }}" class="translation-site-ids">{{ site.name }}</a>
+                        <a data-site-id="{{ site.id }}" class="translation-site-ids">{{ site.name ~ " (" ~ site.language ~ ")" }}</a>
                     {% endif %}
                 </li>
             </ul>
