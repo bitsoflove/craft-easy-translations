@@ -96,8 +96,6 @@ class Translation extends Plugin
                     'allowOverrides' => $i18n->translations[$key]->allowOverrides,
                 ];
             }
-
-            Craft::info($i18n->translations[$key], __METHOD__);
         }
 
         Craft::$app->setComponents(

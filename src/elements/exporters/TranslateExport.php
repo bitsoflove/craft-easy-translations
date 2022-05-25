@@ -28,7 +28,7 @@ class TranslateExport extends ElementExporter
         $results = [];
 
         $language = Craft::$app->getSites()->getSiteById($query->siteId)->language;
-        
+
         if (empty($query->orderBy)) {
             if (isset($viewState['order']) && isset($viewState['sort'])) {
                 $query->orderBy = [$viewState['order'] => $viewState['sort']];

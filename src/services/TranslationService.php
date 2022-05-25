@@ -66,7 +66,7 @@ class TranslationService extends Component
         }
 
         $translations = $this->filterTranslations($translations, $query);
-        
+
         return $translations;
     }
 
@@ -145,7 +145,7 @@ class TranslationService extends Component
                 $matchPosition = $expressions['matchPosition'];
                 foreach ($matches[$matchPosition] as $source) {
                     $elementId++;
-                    
+
                     if (array_key_exists($source, $currentTranslations)) {
                         $translation = Craft::t($query->category, $source, null, $language);
                     } else {
@@ -166,7 +166,7 @@ class TranslationService extends Component
         return $translations;
     }
 
-    private function createTranslateElement($source, $translation, $elementId) 
+    private function createTranslateElement($source, $translation, $elementId)
     {
         $translateId = ElementHelper::generateSlug($source);
 
@@ -199,7 +199,7 @@ class TranslationService extends Component
             $elementId++;
 
             $element = $this->createTranslateElement($source, $translation, $elementId);
-    
+
             if ($query->search && !stristr($element->source, $query->search) && !stristr($element->translation, $query->search)) {
                 continue;
             }

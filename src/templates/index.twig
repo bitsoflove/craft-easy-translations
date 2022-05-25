@@ -25,24 +25,13 @@
 {% set primarySite = craft.app.sites.primarySite %}
 
 {% block actionButton %}
-    <div class="btngroup">
-        <input type="submit" class="btn submit" id="save-button" value="{{ 'Save' | t('translations') }}">
-        <div class="btn submit menubtn"></div>
-        <div class="menu">
-            <ul>
-                <li>
-                    <a id="import-button">
-                        {{ "Import"|t('translation') }}
-                    </a>
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    <a id="export-btn">
-                        {{ "Export"|t('translation') }}
-                    </a>
-                </li>
-            </ul>
+    <div class="flex">
+        <div class="btngroup">
+            <button type="submit" class="btn" data-icon="upload" id="import-button" value="{{ 'Import' | t('translations') }}">{{ 'Import' | t('translations') }}</button>
+            <button type="submit" class="btn" data-icon="download" id="export-btn" value="{{ 'Export' | t('translations') }}">{{ 'Export' | t('translations') }}</button>
+        </div>
+        <div class="btngroup">
+            <input type="submit" class="btn submit" id="save-button" value="{{ 'Save' | t('translations') }}">
         </div>
     </div>
 {% endblock %}

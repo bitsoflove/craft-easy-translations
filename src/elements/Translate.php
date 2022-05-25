@@ -144,8 +144,8 @@ class Translate extends Element
         $sources = [];
 
         $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
-        $sources[] = ['heading' => Craft::t('translation','Template Path')];
-        
+        $sources[] = ['heading' => Craft::t('translation', 'Template Path')];
+
         $sources[] = [
             'label'    => Craft::t('translation', 'All Templates'),
             'key'      => 'templates:',
@@ -158,7 +158,7 @@ class Translate extends Element
             'nested' => $templateSources
         ];
 
-        $sources[] = ['heading' => Craft::t('translation','Category')];
+        $sources[] = ['heading' => Craft::t('translation', 'Category')];
 
         $language = Craft::$app->getSites()->getPrimarySite()->language;
 
