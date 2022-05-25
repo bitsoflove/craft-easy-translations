@@ -25,6 +25,15 @@ function init() {
     document.querySelector("#import-button").addEventListener("click", handleImport);
     document.querySelector("#save-button").addEventListener("click", handleSave);
     document.querySelector("#save-shortcut-button").addEventListener("click", handleSave);
+
+    document.addEventListener('keydown', handleShortcutSave);
+}
+
+function handleShortcutSave(e) {
+    if (Garnish.isCtrlKeyPressed(e) && e.code === "KeyS") {
+        e.preventDefault();
+        handleSave();
+    }
 }
 
 function setSiteId() {
