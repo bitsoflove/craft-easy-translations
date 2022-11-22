@@ -20,7 +20,7 @@ class TranslateExport extends ElementExporter
 {
     public static function displayName(): string
     {
-        return Craft::t('translation', 'Translations');
+        return Craft::t('craft-translator', 'Translations');
     }
 
     public function export(ElementQueryInterface $query): array
