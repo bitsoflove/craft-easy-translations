@@ -1,8 +1,10 @@
-# Translation Changelog
+# Craft Translator Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+## Unreleased
+### Changed
+- Renamed plugin
+### Fixed
+- Fix error on translator admin page if translation base directory doesn't exist 
 
 ## 0.0.1 - 2022-04-27
 ### Added
