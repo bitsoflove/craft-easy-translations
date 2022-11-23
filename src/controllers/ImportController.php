@@ -37,7 +37,7 @@ class ImportController extends Controller
         $csvFile = UploadedFile::getInstanceByName('translation-import');
 
         if ($csvFile->getExtension() !== 'csv') {
-            Craft::$app->getSession()->setError(Craft::t('translation', 'No csv file was imported'));
+            Craft::$app->getSession()->setError(Craft::t('craft-translator', 'No csv file was imported'));
         } else {
             try {
                 $path = Craft::$app->getPath()->getTempAssetUploadsPath() . DIRECTORY_SEPARATOR . $csvFile->name;
@@ -54,15 +54,15 @@ class ImportController extends Controller
                             $total += count($translations);
                         }
 
-                        Craft::$app->getSession()->setNotice(Craft::t('translation', $total . ' translations were imported succesfully'));
+                        Craft::$app->getSession()->setNotice(Craft::t('craft-translator', $total . ' translations were imported succesfully'));
                     } else {
-                        Craft::$app->getSession()->setError(Craft::t('translation', 'The language of the translations does not match the current site'));
+                        Craft::$app->getSession()->setError(Craft::t('craft-translator', 'The language of the translations does not match the current site'));
                     }
                 } else {
-                    Craft::$app->getSession()->setError(Craft::t('translation', 'No translations found in uploaded file'));
+                    Craft::$app->getSession()->setError(Craft::t('craft-translator', 'No translations found in uploaded file'));
                 }
             } catch (\Exception $e) {
-                Craft::$app->getSession()->setError(Craft::t('translation', $e->getMessage()));
+                Craft::$app->getSession()->setError(Craft::t('craft-translator', $e->getMessage()));
             }
         }
 

@@ -49,9 +49,9 @@ class TranslationController extends Controller
         try {
             Translation::$plugin->translation->save($translations, $siteId, $category);
 
-            Craft::$app->getSession()->setNotice(Craft::t('translation', 'Translations were saved succesfully'));
+            Craft::$app->getSession()->setNotice(Craft::t('craft-translator', 'Translations were saved succesfully'));
         } catch (\Exception $e) {
-            Craft::$app->getSession()->setError(Craft::t('translation', 'Something went wrong while saving the translations'));
+            Craft::$app->getSession()->setError(Craft::t('craft-translator', 'Something went wrong while saving the translations'));
         }
 
         return $this->redirectToPostedUrl();

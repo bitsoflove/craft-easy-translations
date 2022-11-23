@@ -1,12 +1,10 @@
-# Translation plugin for Craft CMS 3.x
+# Craft translator
 
 Plugin to manage translations. Export and import functionality.
 
-![Screenshot](resources/img/plugin-logo.png)
-
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+Craft 3
 
 ## Installation
 
@@ -14,30 +12,26 @@ To install the plugin, follow these instructions.
 
 1. Open your terminal and go to your Craft project:
 
-        cd /path/to/project
+```shell
+cd /path/to/project
+```
 
-2. Then tell Composer to load the plugin:
+2. Tell Composer to install the plugin
 
-        composer require bitsoflove/translation
+```shell
+composer require bitsoflove/craft-translator
+```
 
-3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Translation.
+3. Install the plugin in craft
 
-## Translation Overview
+In the Control Panel, go to Settings → Plugins and click the “Install” button for Translation.
 
--Insert text here-
+**or**
 
-## Configuring Translation
+```shell
+php craft plugin/install craft-translator
+```
 
--Insert text here-
+## Usage
 
-## Using Translation
-
--Insert text here-
-
-## Translation Roadmap
-
-Some things to do, and ideas for potential features:
-
-* Release it
-
-Brought to you by [bitsoflove](https://www.bitsoflove.be/)
+**todo**
