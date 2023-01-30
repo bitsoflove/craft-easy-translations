@@ -10,6 +10,16 @@ Craft 3
 
 To install the plugin, follow these instructions.
 
+0. Update your composer.json file and add the repo as a VCS
+
+```
+  "repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/bitsoflove/craft-translator:dev-develop"
+    }
+```
+
 1. Open your terminal and go to your Craft project:
 
 ```shell
