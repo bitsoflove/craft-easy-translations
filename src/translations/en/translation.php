@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
+ * Translation plugin for Craft CMS 3.x/4.x/4.x
  *
  * Plugin to manage translations. Export and import functionality.
  *
@@ -10,12 +10,6 @@
  */
 
 /**
- * Translation en Translation
- *
- * Returns an array with the string to be translated (as passed to `Craft::t('craft-translator', '...')`) as
- * the key, and the translation as the value.
- *
- * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
  *
  * @author    bitsoflove
  * @package   Translation

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
+ * Translation plugin for Craft CMS 3.x/4.x
  *
  * Plugin to manage translations. Export and import functionality.
  *
@@ -12,24 +12,17 @@
 namespace bitsoflove\translation;
 
 use Craft;
-use craft\base\Plugin;
-use craft\web\UrlManager;
-use craft\events\RegisterUrlRulesEvent;
+use bitsoflove\translation\services\ImportService;
 use bitsoflove\translation\services\PhpMessageSource;
 use bitsoflove\translation\services\TranslationService;
-use bitsoflove\translation\services\ImportService;
-
+use craft\base\Plugin;
+use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterUrlRulesEvent;
+use craft\services\Elements;
+use craft\web\UrlManager;
 use yii\base\Event;
 
 /**
- * Craft plugins are very much like little applications in and of themselves. We’ve made
- * it as simple as we can, but the training wheels are off. A little prior knowledge is
- * going to be required to write a plugin.
- *
- * For the purposes of the plugin docs, we’re going to assume that you know PHP and SQL,
- * as well as some semi-advanced concepts like object-oriented programming and PHP namespaces.
- *
- * https://docs.craftcms.com/v3/extend/
  *
  * @author    bitsoflove
  * @package   Translation
@@ -46,9 +39,9 @@ class Translation extends Plugin
      */
     public static $plugin;
 
-    public $schemaVersion = '0.0.1';
-    public $hasCpSettings = false;
-    public $hasCpSection = true;
+    public string $schemaVersion = '0.0.1';
+    public bool $hasCpSettings = false;
+    public bool $hasCpSection = true;
 
     public function init()
     {
@@ -57,14 +50,12 @@ class Translation extends Plugin
 
         $this->registerServices();
 
-        // Register CP routes
+        // Register Translation Controller Action
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules = array_merge($event->rules, [
-                    'translation' => 'translation/translation/index',
-                ]);
+              $event->rules['craft-translator'] = 'craft-translator/translation/index';
             }
         );
 

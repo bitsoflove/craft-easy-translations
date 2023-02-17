@@ -1,7 +1,7 @@
 {# @var craft \craft\web\twig\variables\CraftVariable #}
 {#
 /**
- * Translation plugin for Craft CMS 3.x
+ * Translation plugin for Craft CMS 3.x/4.x
  *
  * Translation index.twig
  *
@@ -13,8 +13,8 @@
  */
 #}
 
-{% extends "_layouts/elementindex" %}
-{% import "_includes/forms" as forms %}
+{% extends "_layouts/elementindex.twig" %}
+{% import "_includes/forms.twig" as forms %}
 {% set elementType = 'bitsoflove\\translation\\elements\\Translate' %}
 {% set elementInstance = craft.app.elements.createElement(elementType) %}
 
@@ -32,7 +32,7 @@
         </div>
         <div class="btngroup">
             <input type="submit" class="btn submit" id="save-button" value="{{ 'Save' | t('translations') }}">
-        
+
             <div class="btn submit menubtn"></div>
             <div class="menu">
                 <ul>
@@ -75,11 +75,11 @@
 {% block content %}
     <form method="post" id="translation-form" enctype="multipart/form-data">
         {{ csrfInput() }}
-        {{ actionInput('translation/translation/save') }}
+        {{ actionInput('craft-translator/translation/save') }}
 
         <input type="hidden" class="translation-site-id" name="siteId" value="{{ primarySite.id }}">
         <input type="hidden" class="translation-category" name="category" value="site">
-        
+
         <div class="main">
             <div class="elements">
             </div>
@@ -88,7 +88,7 @@
 
     <form method="post" id="import-form" enctype="multipart/form-data">
         {{ csrfInput() }}
-        {{ actionInput('translation/import/import-csv') }}
+        {{ actionInput('craft-translator/import/import-csv') }}
 
         <input type="hidden" class="translation-site-id" name="siteId" value="{{ primarySite.id }}">
         <input type="file" accept="text/csv" name="translation-import" style="display: none"/>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
+ * Translation plugin for Craft CMS 3.x/4.x
  *
  * Plugin to manage translations. Export and import functionality.
  *
@@ -48,7 +48,7 @@ class ImportController extends Controller
                 if ($translationsByCategory) {
                     if ($headerLanguage === $language) {
                         $total = 0;
-                        
+
                         foreach ($translationsByCategory as $category => $translations) {
                             Translation::$plugin->translation->save($translations, $siteId, $category);
                             $total += count($translations);

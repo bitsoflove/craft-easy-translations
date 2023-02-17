@@ -52,7 +52,7 @@ function setCategory() {
     });
 }
 
-function handleImport() {    
+function handleImport() {
     const fileButton = document.querySelector("input[name='translation-import']");
     fileButton.click();
 

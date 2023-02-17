@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
+ * Translation plugin for Craft CMS 3.x/4.x
  *
  * Plugin to manage translations. Export and import functionality.
  *
@@ -31,7 +31,7 @@ class TranslationController extends Controller
         $this->requireCpRequest();
 
         return $this->renderTemplate(
-            'translation/index.twig',
+            'craft-translator/index.twig',
             [],
             View::TEMPLATE_MODE_CP
         );

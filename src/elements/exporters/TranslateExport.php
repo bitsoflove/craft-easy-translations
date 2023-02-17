@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
+ * Translation plugin for Craft CMS 3.x/4.x
  *
  * Plugin to manage translations. Export and import functionality.
  *
@@ -33,16 +33,16 @@ class TranslateExport extends ElementExporter
             if (isset($viewState['order']) && isset($viewState['sort'])) {
                 $query->orderBy = [$viewState['order'] => $viewState['sort']];
             } else {
-                $query->orderBy = ['source' => 'asc'];
+                $query->orderBy = ['title' => 'asc'];
             }
         }
 
         $elements = Translation::$plugin->translation->getTranslations($query);
 
-        foreach ($elements as $source => $translation) {
+        foreach ($elements as $translation) {
             $results[] = [
                 'category' => $query->category,
-                'source' => $source ?? '',
+                'source' => $translation->title ?? '',
                 $language => $translation->translation ?? '',
             ];
         }
