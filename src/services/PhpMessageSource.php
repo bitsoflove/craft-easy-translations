@@ -5,7 +5,7 @@ namespace bitsoflove\translation\services;
 use Craft;
 use bitsoflove\translation\Translation;
 
-class PhpMessageSource extends craft\i18n\PhpMessageSource
+class PhpMessageSource extends \craft\i18n\PhpMessageSource
 {
     protected function loadMessages($category, $language): array
     {
