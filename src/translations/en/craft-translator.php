@@ -37,4 +37,8 @@ return [
     'Template Path' => 'Template Path',
     'All Templates' => 'All Templates',
     'Category' => 'Category',
+
+    'View {category}' => 'View {category}',
+    'View templates' => 'View templates',
+    'View categories' => 'View categories',
 ];

@@ -142,61 +142,81 @@ class Translate extends Element
     protected static function defineSources(string $context = null): array
     {
         $sources = [];
+        $user = Craft::$app->getUser();
 
-        $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
-        sort($templateSources);
-        $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
+        if($user->checkPermission('craft-translator-viewTemplates')) {
+          $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
+          sort($templateSources);
+          $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
 
-        $sources[] = [
-            'label'    => Craft::t('craft-translator', 'All Templates'),
-            'key'      => 'templates:',
-            'criteria' => [
-                'path' => [
-                    Craft::$app->path->getSiteTemplatesPath()
-                ],
-                'category' => 'site'
-            ],
-            'nested' => $templateSources
-        ];
-
-        $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
-
-        $language = Craft::$app->getSites()->getPrimarySite()->language;
-        $fallbackLanguage = substr($language, 0, 2);
-
-        $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $language;
-
-        if (!is_dir($siteTranslationsPath)) {
-          $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $fallbackLanguage;
+          $sources[] = [
+              'label'    => Craft::t('craft-translator', 'All Templates'),
+              'key'      => 'templates:',
+              'criteria' => [
+                  'path' => [
+                      Craft::$app->path->getSiteTemplatesPath()
+                  ],
+                  'category' => 'site'
+              ],
+              'nested' => $templateSources
+          ];
         }
 
-        $files = [];
+        if($user->checkPermission('craft-translator-viewCategories')) {
+          $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
 
-        if(
-            is_dir($siteTranslationsPath)
-        ){
-            $options = [
-                'recursive' => false,
-                'only' => ['*.php'],
-                'except' => ['vendor/', 'node_modules/']
-            ];
+          $language = Craft::$app->getSites()->getPrimarySite()->language;
+          $fallbackLanguage = substr($language, 0, 2);
 
-            $files = FileHelper::findFiles($siteTranslationsPath, $options);
-        }
+          $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $language;
 
-        sort($files);
+          if (!is_dir($siteTranslationsPath)) {
+            $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $fallbackLanguage;
+          }
 
-        foreach ($files as $categoryFile) {
-            $fileName = substr(basename($categoryFile), 0, -4);
+          $files = [];
 
+          if(
+              is_dir($siteTranslationsPath)
+          ){
+              $options = [
+                  'recursive' => false,
+                  'only' => ['*.php'],
+                  'except' => ['vendor/', 'node_modules/']
+              ];
+
+              $files = FileHelper::findFiles($siteTranslationsPath, $options);
+          }
+
+          sort($files);
+
+          $filesWithPermissions = [];
+          $filesWithoutPermissions = [];
+
+          foreach ($files as $categoryFile) {
+              $fileName = substr(basename($categoryFile), 0, -4);
+              if($user->checkPermission('craft-translator-viewCategories:' . $fileName)) {
+                array_push($filesWithPermissions, $fileName);
+              } else {
+                array_push($filesWithoutPermissions, $fileName);
+              }
+          }
+
+          if (empty($filesWithPermissions)) {
+            $filesWithPermissions = $filesWithoutPermissions;
+          }
+
+          foreach ($filesWithPermissions as $fileName) {
             $sources['categoriessources:' . $fileName] = [
-                'label' => ucfirst($fileName),
-                'key' => 'categories:' . $fileName,
-                'criteria' => [
-                    'category' => $fileName
-                ],
+              'label' => ucfirst($fileName),
+              'key' => $fileName,
+              'criteria' => [
+                  'category' => $fileName
+              ],
             ];
+          }
         }
+
 
         return $sources;
     }

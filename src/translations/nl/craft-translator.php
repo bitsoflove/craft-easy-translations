@@ -37,4 +37,8 @@ return [
   'Template Path' => 'Template Pad',
   'All Templates' => 'Alle Templates',
   'Category' => 'Categorie',
+
+  'View {category}' => 'Bekijk {category}',
+  'View templates' => 'Bekijk templates',
+  'View categories' => 'Bekijk categorieën',
 ];
