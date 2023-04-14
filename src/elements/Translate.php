@@ -275,9 +275,9 @@ class Translate extends Element
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
         $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-        $trans = 'Translation: ' . ucfirst($lang->displayName);
+        $trans = Craft::t('craft-translator', 'Translation') . ': ' . ucfirst($lang->displayName);
         array_walk_recursive($attributes, function (&$attributes) use ($trans) {
-            if ($attributes == 'Translation') {
+            if ($attributes == Craft::t('craft-translator', 'Translation')) {
                 $attributes = $trans;
             }
         });
