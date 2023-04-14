@@ -211,6 +211,7 @@ class Translate extends Element
         $files = FileHelper::findFiles($path, $options);
 
         foreach ($files as $template) {
+          if (Translation::$plugin->translation->hasStaticTranslations($template)) {
             $fileName = basename($template);
 
             $cleanTemplateKey = str_replace('/', '*', $template);
@@ -224,6 +225,7 @@ class Translate extends Element
                     'category' => 'site'
                 ],
             ];
+          }
         }
 
         $options = [
@@ -234,23 +236,25 @@ class Translate extends Element
         $directories = FileHelper::findDirectories($path, $options);
 
         foreach ($directories as $template) {
-            $fileName = basename($template);
+            if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+              $fileName = basename($template);
 
-            $cleanTemplateKey = str_replace('/', '*', $template);
+              $cleanTemplateKey = str_replace('/', '*', $template);
 
-            $nestedSources = self::getTemplateSources($template);
+              $nestedSources = self::getTemplateSources($template);
 
-            $templateSources['templatessources:' . $fileName] = [
-                'label' => $fileName . '/',
-                'key' => 'templates:' . $cleanTemplateKey,
-                'criteria' => [
-                    'path' => [
-                        $template
-                    ],
-                    'category' => 'site'
-                ],
-                'nested' => $nestedSources,
-            ];
+              $templateSources['templatessources:' . $fileName] = [
+                  'label' => $fileName . '/',
+                  'key' => 'templates:' . $cleanTemplateKey,
+                  'criteria' => [
+                      'path' => [
+                          $template
+                      ],
+                      'category' => 'site'
+                  ],
+                  'nested' => $nestedSources,
+              ];
+            }
         }
 
         return $templateSources;
