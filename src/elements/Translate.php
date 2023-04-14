@@ -144,6 +144,7 @@ class Translate extends Element
         $sources = [];
 
         $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
+        sort($templateSources);
         $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
 
         $sources[] = [
@@ -183,6 +184,8 @@ class Translate extends Element
             $files = FileHelper::findFiles($siteTranslationsPath, $options);
         }
 
+        sort($files);
+
         foreach ($files as $categoryFile) {
             $fileName = substr(basename($categoryFile), 0, -4);
 
@@ -191,7 +194,7 @@ class Translate extends Element
                 'key' => 'categories:' . $fileName,
                 'criteria' => [
                     'category' => $fileName
-                ]
+                ],
             ];
         }
 
@@ -243,6 +246,8 @@ class Translate extends Element
 
               $nestedSources = self::getTemplateSources($template);
 
+              sort($nestedSources);
+
               $templateSources['templatessources:' . $fileName] = [
                   'label' => $fileName . '/',
                   'key' => 'templates:' . $cleanTemplateKey,
@@ -256,6 +261,7 @@ class Translate extends Element
               ];
             }
         }
+        sort($templateSources);
 
         return $templateSources;
     }
