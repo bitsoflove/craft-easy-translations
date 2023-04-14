@@ -161,8 +161,13 @@ class Translate extends Element
         $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
 
         $language = Craft::$app->getSites()->getPrimarySite()->language;
+        $fallbackLanguage = substr($language, 0, 2);
 
         $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $language;
+
+        if (!is_dir($siteTranslationsPath)) {
+          $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $fallbackLanguage;
+        }
 
         $files = [];
 
