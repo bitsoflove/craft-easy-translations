@@ -243,7 +243,15 @@ class TranslationService extends Component
 
     private function getCurrentTranslations($category, $language)
     {
+        // ex. fallback of nl-BE is nl
+        $fallbackLanguage = substr($language, 0, 2);
+
         $staticTranslations = $this->getStaticTranslations($category, $language);
+
+        if ($fallbackLanguage !== $language && empty($staticTranslations)) {
+          $staticTranslations = $this->getStaticTranslations($category, $fallbackLanguage);
+        }
+
         $dbTranslations = $this->getDbTranslations($category, $language);
 
         $translations = array_merge($staticTranslations, $dbTranslations);
