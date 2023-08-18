@@ -11,15 +11,16 @@
 
 namespace bitsoflove\translation;
 
+use bitsoflove\translation\elements\Translate;
 use Craft;
-use bitsoflove\translation\services\ImportService;
 use bitsoflove\translation\services\PhpMessageSource;
 use bitsoflove\translation\services\TranslationService;
 use craft\base\Plugin;
-use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\services\Elements;
 use craft\web\UrlManager;
+use bitsoflove\translation\services\ImportService;
+use craft\events\RegisterUserPermissionsEvent;
+use craft\services\UserPermissions;
 use yii\base\Event;
 
 /**
@@ -49,6 +50,7 @@ class Translation extends Plugin
         self::$plugin = $this;
 
         $this->registerServices();
+        $this->registerPermissions();
 
         // Register Translation Controller Action
         Event::on(
@@ -94,5 +96,34 @@ class Translation extends Plugin
                 'i18n' => $i18n
             ]
         );
+    }
+
+    private function registerPermissions() {
+      Event::on(
+        UserPermissions::class,
+        UserPermissions::EVENT_REGISTER_PERMISSIONS,
+        function(RegisterUserPermissionsEvent $event) {
+          $nestedCategories = [];
+          $categories = array_slice(Translate::sources(), 3);
+
+          foreach ($categories as $categorySource) {
+            if (array_key_exists('key', $categorySource)) {
+              $nestedCategories['craft-translator-viewCategories:' . $categorySource['key']] = [
+                'label' => Craft::t('craft-translator', 'View {category}', ['category' => $categorySource['key']]),
+              ];
+            }
+          }
+
+          $event->permissions['Craft Translator'] = [
+            'craft-translator-viewTemplates' => [
+                'label' => Craft::t('craft-translator', 'View templates'),
+            ],
+            'craft-translator-viewCategories' => [
+                'label' => Craft::t('craft-translator', 'View categories'),
+                'nested' => $nestedCategories,
+            ],
+          ];
+        }
+    );
     }
 }

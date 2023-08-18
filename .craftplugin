@@ -1,1 +1,30 @@
-{"pluginName":"Translation","pluginDescription":"Plugin to manage translations. Export and import functionality.","pluginVersion":"0.0.1","pluginAuthorName":"bitsoflove","pluginVendorName":"bitsoflove","pluginAuthorUrl":"https://www.bitsoflove.be/","pluginAuthorGithub":"bitsoflove","codeComments":"yes","pluginComponents":["controllers","cpsection","models","records","services"],"consolecommandName":"","controllerName":"","cpsectionName":"","elementName":"","fieldName":"","modelName":"","purchasableName":"","recordName":"","serviceName":"","taskName":"","utilityName":"","widgetName":"","apiVersion":"api_version_3_0"}
+{
+  "pluginName": "Translation",
+  "pluginDescription": "Plugin to manage translations. Export and import functionality.",
+  "pluginVersion": "0.0.1",
+  "pluginAuthorName": "bitsoflove",
+  "pluginVendorName": "bitsoflove",
+  "pluginAuthorUrl": "https://www.bitsoflove.be/",
+  "pluginAuthorGithub": "bitsoflove",
+  "codeComments": "yes",
+  "pluginComponents": [
+    "controllers",
+    "cpsection",
+    "models",
+    "records",
+    "services"
+  ],
+  "consolecommandName": "",
+  "controllerName": "",
+  "cpsectionName": "",
+  "elementName": "",
+  "fieldName": "",
+  "modelName": "",
+  "purchasableName": "",
+  "recordName": "",
+  "serviceName": "",
+  "taskName": "",
+  "utilityName": "",
+  "widgetName": "",
+  "apiVersion": "api_version_3_0"
+}

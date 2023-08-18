@@ -154,57 +154,88 @@ class Translate extends Element
     $exporters[] = TranslateExport::class;
     return $exporters;
   }
-
+  
+  /**
+   * @inheritdoc
+   */
   protected static function defineSources(string $context = null): array
   {
     $sources = [];
+    $user = Craft::$app->getUser();
 
-    $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
-    $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
+    if ($user->checkPermission('craft-translator-viewTemplates')) {
+      $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
+      sort($templateSources);
+      $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
 
-    $sources[] = [
-      'label'    => Craft::t('craft-translator', 'All Templates'),
-      'key'      => 'templates:',
-      'criteria' => [
-        'path' => [
-          Craft::$app->path->getSiteTemplatesPath()
-        ],
-        'category' => 'site'
-      ],
-      'nested' => $templateSources
-    ];
-
-    $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
-
-    $language = Craft::$app->getSites()->getPrimarySite()->language;
-
-    $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $language;
-
-    $files = [];
-
-    if (
-      is_dir($siteTranslationsPath)
-    ) {
-      $options = [
-        'recursive' => false,
-        'only' => ['*.php'],
-        'except' => ['vendor/', 'node_modules/']
-      ];
-
-      $files = FileHelper::findFiles($siteTranslationsPath, $options);
-    }
-
-    foreach ($files as $categoryFile) {
-      $fileName = substr(basename($categoryFile), 0, -4);
-
-      $sources['categoriessources:' . $fileName] = [
-        'label' => ucfirst($fileName),
-        'key' => 'categories:' . $fileName,
+      $sources[] = [
+        'label'    => Craft::t('craft-translator', 'All Templates'),
+        'key'      => 'templates:',
         'criteria' => [
-          'category' => $fileName
-        ]
+          'path' => [
+            Craft::$app->path->getSiteTemplatesPath()
+          ],
+          'category' => 'site'
+        ],
+        'nested' => $templateSources
       ];
     }
+
+    if ($user->checkPermission('craft-translator-viewCategories')) {
+      $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
+
+      $language = Craft::$app->getSites()->getPrimarySite()->language;
+      $fallbackLanguage = substr($language, 0, 2);
+
+      $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $language;
+
+      if (!is_dir($siteTranslationsPath)) {
+        $siteTranslationsPath = Craft::$app->getPath()->getSiteTranslationsPath() . DIRECTORY_SEPARATOR . $fallbackLanguage;
+      }
+
+      $files = [];
+
+      if (
+        is_dir($siteTranslationsPath)
+      ) {
+        $options = [
+          'recursive' => false,
+          'only' => ['*.php'],
+          'except' => ['vendor/', 'node_modules/']
+        ];
+
+        $files = FileHelper::findFiles($siteTranslationsPath, $options);
+      }
+
+      sort($files);
+
+      $filesWithPermissions = [];
+      $filesWithoutPermissions = [];
+
+      foreach ($files as $categoryFile) {
+        $fileName = substr(basename($categoryFile), 0, -4);
+        if ($user->checkPermission('craft-translator-viewCategories:' . $fileName)) {
+          array_push($filesWithPermissions, $fileName);
+        } else {
+          array_push($filesWithoutPermissions, $fileName);
+        }
+      }
+
+      if (empty($filesWithPermissions)) {
+        $filesWithPermissions = $filesWithoutPermissions;
+      }
+
+      foreach ($filesWithPermissions as $fileName) {
+        $sources['categoriessources:' . $fileName] = [
+          'label' => ucfirst($fileName),
+          'key' => $fileName,
+          'criteria' => [
+            'category' => $fileName
+          ],
+        ];
+      }
+    }
+
 
     return $sources;
   }
@@ -222,19 +253,21 @@ class Translate extends Element
     $files = FileHelper::findFiles($path, $options);
 
     foreach ($files as $template) {
-      $fileName = basename($template);
+      if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+        $fileName = basename($template);
 
-      $cleanTemplateKey = str_replace('/', '*', $template);
-      $templateSources['templatessources:' . $fileName] = [
-        'label' => $fileName,
-        'key' => 'templates:' . $cleanTemplateKey,
-        'criteria' => [
-          'path' => [
-            $template
+        $cleanTemplateKey = str_replace('/', '*', $template);
+        $templateSources['templatessources:' . $fileName] = [
+          'label' => $fileName,
+          'key' => 'templates:' . $cleanTemplateKey,
+          'criteria' => [
+            'path' => [
+              $template
+            ],
+            'category' => 'site'
           ],
-          'category' => 'site'
-        ],
-      ];
+        ];
+      }
     }
 
     $options = [
@@ -245,31 +278,39 @@ class Translate extends Element
     $directories = FileHelper::findDirectories($path, $options);
 
     foreach ($directories as $template) {
-      $fileName = basename($template);
+      if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+        $fileName = basename($template);
 
-      $cleanTemplateKey = str_replace('/', '*', $template);
+        $cleanTemplateKey = str_replace('/', '*', $template);
 
-      $nestedSources = self::getTemplateSources($template);
+        $nestedSources = self::getTemplateSources($template);
 
-      $templateSources['templatessources:' . $fileName] = [
-        'label' => $fileName . '/',
-        'key' => 'templates:' . $cleanTemplateKey,
-        'criteria' => [
-          'path' => [
-            $template
+        sort($nestedSources);
+
+        $templateSources['templatessources:' . $fileName] = [
+          'label' => $fileName . '/',
+          'key' => 'templates:' . $cleanTemplateKey,
+          'criteria' => [
+            'path' => [
+              $template
+            ],
+            'category' => 'site'
           ],
-          'category' => 'site'
-        ],
-        'nested' => $nestedSources,
-      ];
+          'nested' => $nestedSources,
+        ];
+      }
     }
+    sort($templateSources);
 
     return $templateSources;
   }
 
-
-  public static function indexHtml(ElementQueryInterface $elementQuery, ?array $disabledElementIds, array $viewState, ?string $sourceKey, ?string $context, bool $includeContainer, bool $showCheckboxes): string
+  /**
+   * @inheritdoc
+   */
+  public static function indexHtml(ElementQueryInterface $elementQuery, array $disabledElementIds = null, array $viewState, string $sourceKey = null, string $context = null, bool $includeContainer, bool $showCheckboxes): string
   {
+
     if (empty($elementQuery->siteId)) {
       $primarySite = Craft::$app->getSites()->getPrimarySite();
       $elementQuery->siteId = $primarySite->id;
@@ -279,18 +320,18 @@ class Translate extends Element
       if (isset($viewState['order']) && isset($viewState['sort'])) {
         $elementQuery->orderBy = [$viewState['order'] => $viewState['sort']];
       } else {
-        $elementQuery->orderBy = ['title' => 'asc'];
+        $elementQuery->orderBy = ['source' => 'asc'];
       }
     }
 
     $elements = Translation::$plugin->translation->getTranslations($elementQuery);
-    $attributes = Craft::$app->getElementSources()->getTableAttributes(static::class, $sourceKey);
 
+    $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
     $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
     $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-    $trans = 'Translation: ' . ucfirst($lang->displayName);
+    $trans = Craft::t('craft-translator', 'Translation') . ': ' . ucfirst($lang->displayName);
     array_walk_recursive($attributes, function (&$attributes) use ($trans) {
-      if ($attributes == 'Translation') {
+      if ($attributes == Craft::t('craft-translator', 'Translation')) {
         $attributes = $trans;
       }
     });
@@ -299,17 +340,15 @@ class Translate extends Element
       'viewMode' => $viewState['mode'],
       'context' => $context,
       'disabledElementIds' => $disabledElementIds,
-      'collapsedElementIds' => Craft::$app->getRequest()->getParam('collapsedElementIds'),
-      'showCheckboxes' => false,
       'attributes' => $attributes,
-      'tableName' => static::pluralDisplayName(),
       'elements' => $elements,
+      'showCheckboxes' => $showCheckboxes,
     ];
 
     Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%');");
 
     $template = '_elements/' . $viewState['mode'] . 'view/' . ($includeContainer ? 'container' : 'elements');
 
-    return Craft::$app->getView()->renderTemplate($template, $variables);
+    return Craft::$app->view->renderTemplate($template, $variables);
   }
 }

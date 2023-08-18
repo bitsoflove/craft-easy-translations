@@ -9,3 +9,8 @@
  * @package   Translation
  * @since     0.0.1
  */
+
+ th[data-title="Source"] .element {
+  user-select: auto;
+  -webkit-user-select: auto;
+ }

@@ -107,6 +107,43 @@ class TranslationService extends Component
         return $translations;
     }
 
+    public function hasStaticTranslations($path) {
+      if (is_dir($path)) {
+          $options = [
+              'recursive' => true,
+              'only' => ['*.php', '*.html', '*.twig'],
+              'except' => ['vendor/', 'node_modules/']
+          ];
+
+          $files = FileHelper::findFiles($path, $options);
+
+          foreach ($files as $file) {
+            if($this->hasMatch($file)) {
+              return true;
+            }
+          }
+      } elseif (file_exists($path)) {
+        if($this->hasMatch($path)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private function hasMatch($file) {
+      $contents = file_get_contents($file);
+      $extension = pathinfo($file, PATHINFO_EXTENSION);
+      $expressions = $this->_expressions[$extension];
+      $matched = false;
+
+      foreach ($expressions['regex'] as $regex) {
+        if (preg_match_all($regex, $contents, $matches)) {
+          $matched = true;
+        }
+      }
+      return $matched;
+    }
+
     private function filterTranslations($translations, $query)
     {
         $sort = $query->orderBy;
@@ -241,7 +278,15 @@ class TranslationService extends Component
 
     private function getCurrentTranslations($category, $language)
     {
+        // ex. fallback of nl-BE is nl
+        $fallbackLanguage = substr($language, 0, 2);
+
         $staticTranslations = $this->getStaticTranslations($category, $language);
+
+        if ($fallbackLanguage !== $language && empty($staticTranslations)) {
+          $staticTranslations = $this->getStaticTranslations($category, $fallbackLanguage);
+        }
+
         $dbTranslations = $this->getDbTranslations($category, $language);
 
         $translations = array_merge($staticTranslations, $dbTranslations);
