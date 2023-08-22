@@ -22,9 +22,11 @@ return [
     'Translations' => 'Translations',
     'Source' => 'Source',
     'Translation' => 'Translation',
-    'Template Path' => 'Template Path',
+    'Templates' => 'Templates',
     'All Templates' => 'All Templates',
-    'Category' => 'Category',
+    'Categories' => 'Categories',
+    'Import' => 'Import',
+    'Export' => 'Export',
 
     'View {category}' => 'View {category}',
     'View templates' => 'View templates',

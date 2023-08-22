@@ -22,9 +22,11 @@ return [
   'Translations' => 'Vertalingen',
   'Source' => 'Source',
   'Translation' => 'Vertaling',
-  'Template Path' => 'Template Pad',
+  'Templates' => 'Templates',
   'All Templates' => 'Alle Templates',
-  'Category' => 'Categorie',
+  'Categories' => 'Categorieën',
+  'Import' => 'Import',
+  'Export' => 'Export',
 
   'View {category}' => 'Bekijk {category}',
   'View templates' => 'Bekijk templates',
