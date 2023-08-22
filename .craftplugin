@@ -1,18 +1,19 @@
 {
-  "pluginName": "Translation",
-  "pluginDescription": "Plugin to manage translations. Export and import functionality.",
-  "pluginVersion": "0.0.1",
-  "pluginAuthorName": "bitsoflove",
-  "pluginVendorName": "bitsoflove",
+  "pluginName": "Easy Translations",
+  "pluginDescription": "Easily manage your static translations in Craft CMS.",
+  "pluginVersion": "1.0.0",
+  "pluginAuthorName": "Bits of Love",
+  "pluginVendorName": "Bits of Love",
   "pluginAuthorUrl": "https://www.bitsoflove.be/",
-  "pluginAuthorGithub": "bitsoflove",
-  "codeComments": "yes",
+  "pluginAuthorGithub": "https://github.com/bitsoflove/",
+  "codeComments": "",
   "pluginComponents": [
     "controllers",
     "cpsection",
     "models",
     "records",
-    "services"
+    "services",
+    "elementtypes"
   ],
   "consolecommandName": "",
   "controllerName": "",

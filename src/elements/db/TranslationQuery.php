@@ -1,14 +1,21 @@
 <?php
 
-namespace bitsoflove\translation\elements\db;
+/**
+ * @link      https://www.bitsoflove.be/
+ * @copyright Copyright (c) 2022 bitsoflove
+ */
+
+namespace bitsoflove\translations\elements\db;
 
 use Craft;
 use craft\elements\db\ElementQuery;
 
 /**
- * Translate query
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
-class TranslateQuery extends ElementQuery
+class TranslationQuery extends ElementQuery
 {
     public mixed $id;
     public $path;

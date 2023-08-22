@@ -1,26 +1,27 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x/4.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation\elements\exporters;
+namespace bitsoflove\translations\elements\exporters;
 
 use Craft;
 use craft\base\ElementExporter;
 use craft\elements\db\ElementQueryInterface;
-use bitsoflove\translation\Translation;
+use bitsoflove\translations\Translations;
 
-class TranslateExport extends ElementExporter
+/**
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
+ */
+class TranslationExport extends ElementExporter
 {
     public static function displayName(): string
     {
-        return Craft::t('craft-translator', 'Translations');
+        return Craft::t('easy-translations', 'Translations');
     }
 
     public function export(ElementQueryInterface $query): array
@@ -37,7 +38,7 @@ class TranslateExport extends ElementExporter
             }
         }
 
-        $elements = Translation::$plugin->translation->getTranslations($query);
+        $elements = Translations::$plugin->translation->getTranslations($query);
 
         foreach ($elements as $translation) {
             $results[] = [

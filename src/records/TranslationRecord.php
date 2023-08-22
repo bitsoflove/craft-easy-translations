@@ -1,25 +1,20 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x/4.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation\records;
+namespace bitsoflove\translations\records;
 
 use craft\db\ActiveRecord;
-use bitsoflove\translation\Constants;
-use bitsoflove\translation\records\SourceRecord;
+use bitsoflove\translations\Constants;
+use bitsoflove\translations\records\SourceRecord;
 
 /**
- *
- * @author    bitsoflove
- * @package   Translation
- * @since     0.0.1
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
 class TranslationRecord extends ActiveRecord
 {

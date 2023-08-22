@@ -1,22 +1,29 @@
 <?php
 
-namespace bitsoflove\translation\elements;
+/**
+ * @link      https://www.bitsoflove.be/
+ * @copyright Copyright (c) 2022 bitsoflove
+ */
+
+namespace bitsoflove\translations\elements;
 
 use Craft;
-use bitsoflove\translation\elements\conditions\TranslateCondition;
-use bitsoflove\translation\elements\db\TranslateQuery;
+use bitsoflove\translations\elements\conditions\TranslationCondition;
+use bitsoflove\translations\elements\db\TranslationQuery;
 use craft\base\Element;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
-use bitsoflove\translation\Translation;
-use bitsoflove\translation\elements\exporters\TranslateExport;
+use bitsoflove\translations\Translations;
+use bitsoflove\translations\elements\exporters\TranslationExport;
 use craft\helpers\FileHelper;
 
 /**
- * Translate element type
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
-class Translate extends Element
+class Translation extends Element
 {
   public string $translation; // Required to enable search on translation value
   public $field; // The actual field template that gets rendered in the column
@@ -24,22 +31,22 @@ class Translate extends Element
   // This will be the name of the column header
   public static function displayName(): string
   {
-    return Craft::t('craft-translator', 'Source');
+    return Craft::t('easy-translations', 'Source');
   }
 
   public static function lowerDisplayName(): string
   {
-    return Craft::t('craft-translator', 'translation');
+    return Craft::t('easy-translations', 'translation');
   }
 
   public static function pluralDisplayName(): string
   {
-    return Craft::t('craft-translator', 'Translations');
+    return Craft::t('easy-translations', 'Translations');
   }
 
   public static function pluralLowerDisplayName(): string
   {
-    return Craft::t('craft-translator', 'translations');
+    return Craft::t('easy-translations', 'translations');
   }
 
   public static function trackChanges(): bool
@@ -74,12 +81,12 @@ class Translate extends Element
 
   public static function find(): ElementQueryInterface
   {
-    return Craft::createObject(TranslateQuery::class, [static::class]);
+    return Craft::createObject(TranslationQuery::class, [static::class]);
   }
 
   public static function createCondition(): ElementConditionInterface
   {
-    return Craft::createObject(TranslateCondition::class, [static::class]);
+    return Craft::createObject(TranslationCondition::class, [static::class]);
   }
 
   protected static function includeSetStatusAction(): bool
@@ -90,8 +97,8 @@ class Translate extends Element
   protected static function defineSortOptions(): array
   {
     return [
-      'field' => Craft::t('craft-translator', 'Translation'),
-      'title' => Craft::t('craft-translator', 'Source'),
+      'field' => Craft::t('easy-translations', 'Translation'),
+      'title' => Craft::t('easy-translations', 'Source'),
     ];
   }
 
@@ -103,7 +110,7 @@ class Translate extends Element
   protected static function defineTableAttributes(): array
   {
     return [
-      'field' => ['label' => Craft::t('craft-translator', 'Translation')],
+      'field' => ['label' => Craft::t('easy-translations', 'Translation')],
     ];
   }
 
@@ -145,7 +152,7 @@ class Translate extends Element
 
   protected static function defineExporters(string $source): array
   {
-    $exporters[] = TranslateExport::class;
+    $exporters[] = TranslationExport::class;
     return $exporters;
   }
 
@@ -157,13 +164,13 @@ class Translate extends Element
     $sources = [];
     $user = Craft::$app->getUser();
 
-    if ($user->checkPermission('craft-translator-viewTemplates')) {
+    if ($user->checkPermission('easy-translations-viewTemplates')) {
       $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
       sort($templateSources);
-      $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
+      $sources[] = ['heading' => Craft::t('easy-translations', 'Template Path')];
 
       $sources[] = [
-        'label'    => Craft::t('craft-translator', 'All Templates'),
+        'label'    => Craft::t('easy-translations', 'All Templates'),
         'key'      => 'templates:',
         'criteria' => [
           'path' => [
@@ -175,8 +182,8 @@ class Translate extends Element
       ];
     }
 
-    if ($user->checkPermission('craft-translator-viewCategories')) {
-      $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
+    if ($user->checkPermission('easy-translations-viewCategories')) {
+      $sources[] = ['heading' => Craft::t('easy-translations', 'Category')];
 
       $language = Craft::$app->getSites()->getPrimarySite()->language;
       $fallbackLanguage = substr($language, 0, 2);
@@ -208,7 +215,7 @@ class Translate extends Element
 
       foreach ($files as $categoryFile) {
         $fileName = substr(basename($categoryFile), 0, -4);
-        if ($user->checkPermission('craft-translator-viewCategories:' . $fileName)) {
+        if ($user->checkPermission('easy-translations-viewCategories:' . $fileName)) {
           array_push($filesWithPermissions, $fileName);
         } else {
           array_push($filesWithoutPermissions, $fileName);
@@ -247,7 +254,7 @@ class Translate extends Element
     $files = FileHelper::findFiles($path, $options);
 
     foreach ($files as $template) {
-      if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+      if (Translations::$plugin->translation->hasStaticTranslations($template)) {
         $fileName = basename($template);
 
         $cleanTemplateKey = str_replace('/', '*', $template);
@@ -272,7 +279,7 @@ class Translate extends Element
     $directories = FileHelper::findDirectories($path, $options);
 
     foreach ($directories as $template) {
-      if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+      if (Translations::$plugin->translation->hasStaticTranslations($template)) {
         $fileName = basename($template);
 
         $cleanTemplateKey = str_replace('/', '*', $template);
@@ -318,14 +325,14 @@ class Translate extends Element
       }
     }
 
-    $elements = Translation::$plugin->translation->getTranslations($elementQuery);
+    $elements = Translations::$plugin->translation->getTranslations($elementQuery);
 
     $attributes = Craft::$app->getElementSources()->getTableAttributes(static::class, $sourceKey);
     $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
     $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-    $trans = Craft::t('craft-translator', 'Translation') . ': ' . ucfirst($lang->displayName);
+    $trans = Craft::t('easy-translations', 'Translation') . ': ' . ucfirst($lang->displayName);
     array_walk_recursive($attributes, function (&$attributes) use ($trans) {
-      if ($attributes == Craft::t('craft-translator', 'Translation')) {
+      if ($attributes == Craft::t('easy-translations', 'Translation')) {
         $attributes = $trans;
       }
     });

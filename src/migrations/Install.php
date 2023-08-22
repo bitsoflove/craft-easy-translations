@@ -1,33 +1,20 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x/4.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation\migrations;
+namespace bitsoflove\translations\migrations;
 
 use Craft;
 use craft\db\Migration;
-use bitsoflove\translation\Constants;
+use bitsoflove\translations\Constants;
 
 /**
- * Translation Install Migration
- *
- * If your plugin needs to create any custom database tables when it gets installed,
- * create a migrations/ folder within your plugin folder, and save an Install.php file
- * within it using the following template:
- *
- * If you need to perform any additional actions on install/uninstall, override the
- * safeUp() and safeDown() methods.
- *
- * @author    bitsoflove
- * @package   Translation
- * @since     0.0.1
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
 class Install extends Migration
 {

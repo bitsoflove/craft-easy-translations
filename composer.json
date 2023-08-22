@@ -1,8 +1,8 @@
 {
-    "name": "bitsoflove/craft-translator",
-    "description": "Plugin to manage translations. Export and import functionality.",
-    "type": "craft-plugin",
+    "name": "bitsoflove/craft-easy-translations",
+    "description": "Easily manage your static translations in Craft CMS.",
     "version": "1.0.0",
+    "type": "craft-plugin",
     "keywords": [
         "craft",
         "craft3",
@@ -10,7 +10,8 @@
         "cms",
         "craftcms",
         "craft-plugin",
-        "translation"
+        "translations",
+        "multisite"
     ],
     "support": {
         "docs": "https://github.com/bitsoflove/craft-translator/blob/develop/README.md",
@@ -19,7 +20,7 @@
     "license": "proprietary",
     "authors": [
         {
-            "name": "bitsoflove",
+            "name": "Bits of Love",
             "homepage": "https://www.bitsoflove.be/"
         }
     ],
@@ -28,16 +29,18 @@
     },
     "autoload": {
         "psr-4": {
-          "bitsoflove\\translation\\": "src/"
+            "bitsoflove\\translations\\": "src/"
         }
     },
     "extra": {
-        "name": "Craft Translator",
-        "handle": "craft-translator",
+        "name": "Easy Translations",
+        "handle": "easy-translations",
         "developer": "bitsoflove",
+        "hasCpSection": true,
+        "hasCpSettings": false,
         "developerUrl": "https://www.bitsoflove.be/",
         "documentationUrl": "https://github.com/bitsoflove/craft-translator/blob/develop/README.md",
         "changelogUrl": "https://github.com/bitsoflove/craft-translator/blob/develop/CHANGELOG.md",
-        "class": "bitsoflove\\translation\\Translation"
+        "class": "bitsoflove\\translations\\Translations"
     }
 }

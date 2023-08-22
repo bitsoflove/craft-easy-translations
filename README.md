@@ -1,4 +1,4 @@
-# Craft translator
+# Easy Translations
 
 Plugin to manage translations. Export and import functionality.
 

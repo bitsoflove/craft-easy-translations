@@ -1,24 +1,19 @@
-{# @var craft \craft\web\twig\variables\CraftVariable #}
 {#
 /**
- * Translation plugin for Craft CMS 3.x/4.x
- *
- * Translation index.twig
- *
- * @author    bitsoflove
- * @copyright Copyright (c) 2022 bitsoflove
  * @link      https://www.bitsoflove.be/
- * @package   Translation
- * @since     0.0.1
+ * @copyright Copyright (c) 2022 bitsoflove
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
 #}
 
 {% extends "_layouts/elementindex.twig" %}
 {% import "_includes/forms.twig" as forms %}
-{% set elementType = 'bitsoflove\\translation\\elements\\Translate' %}
+{% set elementType = 'bitsoflove\\translations\\elements\\Translation' %}
 {% set elementInstance = craft.app.elements.createElement(elementType) %}
 
-{% do view.registerAssetBundle("bitsoflove\\translation\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
+{% do view.registerAssetBundle("bitsoflove\\translations\\assetbundles\\TranslationsAsset") %}
 {% set title = "Translate" %}
 
 {% set sites = craft.app.sites.getAllSites() %}
@@ -75,7 +70,7 @@
 {% block content %}
     <form method="post" id="translation-form" enctype="multipart/form-data">
         {{ csrfInput() }}
-        {{ actionInput('craft-translator/translation/save') }}
+        {{ actionInput('easy-translations/translations/save') }}
 
         <input type="hidden" class="translation-site-id" name="siteId" value="{{ primarySite.id }}">
         <input type="hidden" class="translation-category" name="category" value="site">
@@ -88,7 +83,7 @@
 
     <form method="post" id="import-form" enctype="multipart/form-data">
         {{ csrfInput() }}
-        {{ actionInput('craft-translator/import/import-csv') }}
+        {{ actionInput('easy-translations/import/import-csv') }}
 
         <input type="hidden" class="translation-site-id" name="siteId" value="{{ primarySite.id }}">
         <input type="file" accept="text/csv" name="translation-import" style="display: none"/>
