@@ -14,8 +14,8 @@
         "multisite"
     ],
     "support": {
-        "docs": "https://github.com/bitsoflove/craft-translator/blob/develop/README.md",
-        "issues": "https://github.com/bitsoflove/craft-translator/issues"
+        "docs": "https://github.com/bitsoflove/craft-easy-translations/blob/craft-4/README.md",
+        "issues": "https://github.com/bitsoflove/craft-easy-translations/issues"
     },
     "license": "proprietary",
     "authors": [
@@ -39,8 +39,8 @@
         "hasCpSection": true,
         "hasCpSettings": false,
         "developerUrl": "https://www.bitsoflove.be/",
-        "documentationUrl": "https://github.com/bitsoflove/craft-translator/blob/develop/README.md",
-        "changelogUrl": "https://github.com/bitsoflove/craft-translator/blob/develop/CHANGELOG.md",
+        "documentationUrl": "https://github.com/bitsoflove/craft-easy-translations/blob/craft-4/README.md",
+        "changelogUrl": "https://github.com/bitsoflove/craft-easy-translations/blob/craft-4/CHANGELOG.md",
         "class": "bitsoflove\\translations\\Translations"
     }
 }
