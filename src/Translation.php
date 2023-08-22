@@ -114,14 +114,17 @@ class Translation extends Plugin
             }
           }
 
-          $event->permissions['Craft Translator'] = [
-            'craft-translator-viewTemplates' => [
-                'label' => Craft::t('craft-translator', 'View templates'),
-            ],
-            'craft-translator-viewCategories' => [
-                'label' => Craft::t('craft-translator', 'View categories'),
-                'nested' => $nestedCategories,
-            ],
+          $event->permissions[] = [
+            'heading' => 'Craft Translator',
+            'permissions' => [
+              'craft-translator-viewTemplates' => [
+                  'label' => Craft::t('craft-translator', 'View templates'),
+              ],
+              'craft-translator-viewCategories' => [
+                  'label' => Craft::t('craft-translator', 'View categories'),
+                  'nested' => $nestedCategories,
+              ],
+            ]
           ];
         }
     );
