@@ -95,7 +95,7 @@ class Translations extends Plugin
         UserPermissions::EVENT_REGISTER_PERMISSIONS,
         function(RegisterUserPermissionsEvent $event) {
           $nestedCategories = [];
-          $categories = array_slice(Translation::sources(), 3);
+          $categories = array_slice(Translation::sources(''), 3);
 
           foreach ($categories as $categorySource) {
             if (array_key_exists('key', $categorySource)) {
