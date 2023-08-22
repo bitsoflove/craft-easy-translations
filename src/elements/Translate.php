@@ -82,12 +82,6 @@ class Translate extends Element
     return Craft::createObject(TranslateCondition::class, [static::class]);
   }
 
-  protected static function defineActions(string $source): array
-  {
-    // List any bulk element actions here
-    return [];
-  }
-
   protected static function includeSetStatusAction(): bool
   {
     return false;
@@ -154,7 +148,7 @@ class Translate extends Element
     $exporters[] = TranslateExport::class;
     return $exporters;
   }
-  
+
   /**
    * @inheritdoc
    */
@@ -326,7 +320,7 @@ class Translate extends Element
 
     $elements = Translation::$plugin->translation->getTranslations($elementQuery);
 
-    $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
+    $attributes = Craft::$app->getElementSources()->getTableAttributes(static::class, $sourceKey);
     $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
     $lang = Craft::$app->getI18n()->getLocaleById($site->language);
     $trans = Craft::t('craft-translator', 'Translation') . ': ' . ucfirst($lang->displayName);
