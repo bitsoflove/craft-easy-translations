@@ -1,29 +1,25 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation\services;
+namespace bitsoflove\translations\services;
 
+use bitsoflove\translations\elements\Translation;
 use Craft;
 use craft\base\Component;
 use craft\helpers\FileHelper;
 use craft\helpers\ElementHelper;
-use bitsoflove\translation\records\TranslationRecord;
-use bitsoflove\translation\records\SourceRecord;
-use bitsoflove\translation\elements\Translate;
+use bitsoflove\translations\records\TranslationRecord;
+use bitsoflove\translations\records\SourceRecord;
 use craft\elements\db\ElementQueryInterface;
 
 /**
- * @author    bitsoflove
- * @package   Translation
- * @since     0.0.1
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
 class TranslationService extends Component
 {
@@ -214,7 +210,7 @@ class TranslationService extends Component
             'placeholder' => $translation,
         ]);
 
-        $element = new Translate([
+        $element = new Translation([
             'id' => $elementId,
             'translateId' => $translateId,
             'source' => $source,

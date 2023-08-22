@@ -1,19 +1,20 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation\elements\db;
+namespace bitsoflove\translations\elements\db;
 
 use craft\elements\db\ElementQuery;
 
-class TranslateQuery extends ElementQuery
+/**
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
+ */
+class TranslationQuery extends ElementQuery
 {
 
     // General - Properties

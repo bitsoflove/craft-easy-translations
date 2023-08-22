@@ -1,26 +1,22 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation\elements;
+namespace bitsoflove\translations\elements;
 
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use craft\web\ErrorHandler;
-use bitsoflove\translation\elements\db\TranslateQuery;
-use bitsoflove\translation\elements\exporters\TranslateExport;
-use bitsoflove\translation\Translation;
+use bitsoflove\translations\elements\db\TranslationQuery;
+use bitsoflove\translations\elements\exporters\TranslationExport;
+use bitsoflove\translations\Translations;
 use craft\helpers\FileHelper;
 
-class Translate extends Element
+class Translation extends Element
 {
     public $source;
     public $translateId;
@@ -37,7 +33,7 @@ class Translate extends Element
      */
     public function getName()
     {
-        return Craft::t('craft-translator', 'Translations');
+        return Craft::t('easy-translations', 'Translations');
     }
 
     /**
@@ -72,7 +68,7 @@ class Translate extends Element
 
     public static function find(): ElementQueryInterface
     {
-        return new TranslateQuery(get_called_class());
+        return new TranslationQuery(get_called_class());
     }
 
     /**
@@ -80,9 +76,9 @@ class Translate extends Element
      */
     protected static function defineTableAttributes(): array
     {
-        $attributes['source'] = ['label' => Craft::t('craft-translator', 'Source')];
+        $attributes['source'] = ['label' => Craft::t('easy-translations', 'Source')];
 
-        $attributes['field'] = ['label' => Craft::t('craft-translator', 'Translation')];
+        $attributes['field'] = ['label' => Craft::t('easy-translations', 'Translation')];
 
         return $attributes;
     }
@@ -125,14 +121,14 @@ class Translate extends Element
     protected static function defineSortOptions(): array
     {
         return [
-            'source' => Craft::t('craft-translator', 'Source'),
-            'field' => Craft::t('craft-translator', 'Translation'),
+            'source' => Craft::t('easy-translations', 'Source'),
+            'field' => Craft::t('easy-translations', 'Translation'),
         ];
     }
 
     protected static function defineExporters(string $source): array
     {
-        $exporters[] = TranslateExport::class;
+        $exporters[] = TranslationExport::class;
         return $exporters;
     }
 
@@ -144,13 +140,13 @@ class Translate extends Element
         $sources = [];
         $user = Craft::$app->getUser();
 
-        if($user->checkPermission('craft-translator-viewTemplates')) {
+        if($user->checkPermission('easy-translations-viewTemplates')) {
           $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
           sort($templateSources);
-          $sources[] = ['heading' => Craft::t('craft-translator', 'Template Path')];
+          $sources[] = ['heading' => Craft::t('easy-translations', 'Template Path')];
 
           $sources[] = [
-              'label'    => Craft::t('craft-translator', 'All Templates'),
+              'label'    => Craft::t('easy-translations', 'All Templates'),
               'key'      => 'templates:',
               'criteria' => [
                   'path' => [
@@ -162,8 +158,8 @@ class Translate extends Element
           ];
         }
 
-        if($user->checkPermission('craft-translator-viewCategories')) {
-          $sources[] = ['heading' => Craft::t('craft-translator', 'Category')];
+        if($user->checkPermission('easy-translations-viewCategories')) {
+          $sources[] = ['heading' => Craft::t('easy-translations', 'Category')];
 
           $language = Craft::$app->getSites()->getPrimarySite()->language;
           $fallbackLanguage = substr($language, 0, 2);
@@ -195,7 +191,7 @@ class Translate extends Element
 
           foreach ($files as $categoryFile) {
               $fileName = substr(basename($categoryFile), 0, -4);
-              if($user->checkPermission('craft-translator-viewCategories:' . $fileName)) {
+              if($user->checkPermission('easy-translations-viewCategories:' . $fileName)) {
                 array_push($filesWithPermissions, $fileName);
               } else {
                 array_push($filesWithoutPermissions, $fileName);
@@ -234,7 +230,7 @@ class Translate extends Element
         $files = FileHelper::findFiles($path, $options);
 
         foreach ($files as $template) {
-          if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+          if (Translations::$plugin->translation->hasStaticTranslations($template)) {
             $fileName = basename($template);
 
             $cleanTemplateKey = str_replace('/', '*', $template);
@@ -259,7 +255,7 @@ class Translate extends Element
         $directories = FileHelper::findDirectories($path, $options);
 
         foreach ($directories as $template) {
-            if (Translation::$plugin->translation->hasStaticTranslations($template)) {
+            if (Translations::$plugin->translation->hasStaticTranslations($template)) {
               $fileName = basename($template);
 
               $cleanTemplateKey = str_replace('/', '*', $template);
@@ -305,14 +301,14 @@ class Translate extends Element
             }
         }
 
-        $elements = Translation::$plugin->translation->getTranslations($elementQuery);
+        $elements = Translations::$plugin->translation->getTranslations($elementQuery);
 
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
         $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-        $trans = Craft::t('craft-translator', 'Translation') . ': ' . ucfirst($lang->displayName);
+        $trans = Craft::t('easy-translations', 'Translation') . ': ' . ucfirst($lang->displayName);
         array_walk_recursive($attributes, function (&$attributes) use ($trans) {
-            if ($attributes == Craft::t('craft-translator', 'Translation')) {
+            if ($attributes == Craft::t('easy-translations', 'Translation')) {
                 $attributes = $trans;
             }
         });

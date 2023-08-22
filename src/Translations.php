@@ -1,56 +1,39 @@
 <?php
 
 /**
- * Translation plugin for Craft CMS 3.x
- *
- * Plugin to manage translations. Export and import functionality.
- *
  * @link      https://www.bitsoflove.be/
  * @copyright Copyright (c) 2022 bitsoflove
  */
 
-namespace bitsoflove\translation;
+namespace bitsoflove\translations;
 
-use bitsoflove\translation\elements\Translate;
+use bitsoflove\translations\elements\Translation;
 use Craft;
+use bitsoflove\translations\services\PhpMessageSource;
+use bitsoflove\translations\services\TranslationService;
 use craft\base\Plugin;
-use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
-use bitsoflove\translation\services\PhpMessageSource;
-use bitsoflove\translation\services\TranslationService;
-use bitsoflove\translation\services\ImportService;
+use craft\web\UrlManager;
+use bitsoflove\translations\services\ImportService;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\UserPermissions;
 use yii\base\Event;
 
 /**
- * Craft plugins are very much like little applications in and of themselves. We’ve made
- * it as simple as we can, but the training wheels are off. A little prior knowledge is
- * going to be required to write a plugin.
- *
- * For the purposes of the plugin docs, we’re going to assume that you know PHP and SQL,
- * as well as some semi-advanced concepts like object-oriented programming and PHP namespaces.
- *
- * https://docs.craftcms.com/v3/extend/
- *
- * @author    bitsoflove
- * @package   Translation
- * @since     0.0.1
- *
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
-class Translation extends Plugin
+class Translations extends Plugin
 {
     /**
-     * Static property that is an instance of this plugin class so that it can be accessed via
-     * Translation::$plugin
-     *
-     * @var Translation
+     * @var Translations
      */
     public static $plugin;
 
-    public $schemaVersion = '0.0.1';
-    public $hasCpSettings = false;
-    public $hasCpSection = true;
+    public string $schemaVersion = '1.0.0';
+    public bool $hasCpSettings = false;
+    public bool $hasCpSection = true;
 
     public function init()
     {
@@ -65,9 +48,7 @@ class Translation extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules = array_merge($event->rules, [
-                    'translation' => 'translation/translation/index',
-                ]);
+              $event->rules['easy-translations'] = 'easy-translations/translations/index';
             }
         );
 
@@ -114,22 +95,22 @@ class Translation extends Plugin
         UserPermissions::EVENT_REGISTER_PERMISSIONS,
         function(RegisterUserPermissionsEvent $event) {
           $nestedCategories = [];
-          $categories = array_slice(Translate::sources(), 3);
+          $categories = array_slice(Translation::sources(), 3);
 
           foreach ($categories as $categorySource) {
             if (array_key_exists('key', $categorySource)) {
-              $nestedCategories['craft-translator-viewCategories:' . $categorySource['key']] = [
-                'label' => Craft::t('craft-translator', 'View {category}', ['category' => $categorySource['key']]),
+              $nestedCategories['easy-translations-viewCategories:' . $categorySource['key']] = [
+                'label' => Craft::t('easy-translations', 'View {category}', ['category' => $categorySource['key']]),
               ];
             }
           }
 
-          $event->permissions['Craft Translator'] = [
-            'craft-translator-viewTemplates' => [
-                'label' => Craft::t('craft-translator', 'View templates'),
+          $event->permissions['Easy Translations'] = [
+            'easy-translations-viewTemplates' => [
+                'label' => Craft::t('easy-translations', 'View templates'),
             ],
-            'craft-translator-viewCategories' => [
-                'label' => Craft::t('craft-translator', 'View categories'),
+            'easy-translations-viewCategories' => [
+                'label' => Craft::t('easy-translations', 'View categories'),
                 'nested' => $nestedCategories,
             ],
           ];

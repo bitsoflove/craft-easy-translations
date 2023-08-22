@@ -1,13 +1,9 @@
 /**
- * Translation plugin for Craft CMS
- *
- * Index Field JS
- *
- * @author    bitsoflove
+ * @author    Bits of Love
  * @copyright Copyright (c) 2022 bitsoflove
  * @link      https://www.bitsoflove.be/
- * @package   Translation
- * @since     0.0.1
+ * @package   craft-easy-translations
+ * @since     1.0.0
  */
 
 window.addEventListener("DOMContentLoaded", init);
