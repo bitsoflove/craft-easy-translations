@@ -14,7 +14,7 @@
 {% set elementInstance = craft.app.elements.createElement(elementType) %}
 
 {% do view.registerAssetBundle("bitsoflove\\translations\\assetbundles\\TranslationsAsset") %}
-{% set title = "Translate" %}
+{% set title = "Translations"|t('easy-translations') %}
 
 {% set sites = craft.app.sites.getAllSites() %}
 {% set primarySite = craft.app.sites.primarySite %}
@@ -22,11 +22,11 @@
 {% block actionButton %}
     <div class="flex">
         <div class="btngroup">
-            <button type="submit" class="btn" data-icon="upload" id="import-button" value="{{ 'Import' | t('translations') }}">{{ 'Import' | t('translations') }}</button>
-            <button type="submit" class="btn" data-icon="download" id="export-btn" value="{{ 'Export' | t('translations') }}">{{ 'Export' | t('translations') }}</button>
+            <button type="submit" class="btn" data-icon="upload" id="import-button" value="{{ 'Import' | t('easy-translations') }}">{{ 'Import' | t('easy-translations') }}</button>
+            <button type="submit" class="btn" data-icon="download" id="export-btn" value="{{ 'Export' | t('easy-translations') }}">{{ 'Export' | t('easy-translations') }}</button>
         </div>
         <div class="btngroup">
-            <input type="submit" class="btn submit" id="save-button" value="{{ 'Save' | t('translations') }}">
+            <input type="submit" class="btn submit" id="save-button" value="{{ 'Save' | t('easy-translations') }}">
 
             <div class="btn submit menubtn"></div>
             <div class="menu">

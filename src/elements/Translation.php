@@ -143,7 +143,7 @@ class Translation extends Element
         if($user->checkPermission('easy-translations-viewTemplates')) {
           $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
           sort($templateSources);
-          $sources[] = ['heading' => Craft::t('easy-translations', 'Template Path')];
+          $sources[] = ['heading' => Craft::t('easy-translations', 'Templates')];
 
           $sources[] = [
               'label'    => Craft::t('easy-translations', 'All Templates'),
@@ -159,7 +159,7 @@ class Translation extends Element
         }
 
         if($user->checkPermission('easy-translations-viewCategories')) {
-          $sources[] = ['heading' => Craft::t('easy-translations', 'Category')];
+          $sources[] = ['heading' => Craft::t('easy-translations', 'Categories')];
 
           $language = Craft::$app->getSites()->getPrimarySite()->language;
           $fallbackLanguage = substr($language, 0, 2);
