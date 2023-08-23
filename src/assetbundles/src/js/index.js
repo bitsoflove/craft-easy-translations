@@ -46,7 +46,6 @@ function setCategory() {
   const categories = document.querySelectorAll('[data-key^="categories"]');
   const inputs = document.querySelectorAll('.translation-category');
   inputs.forEach((input) => {
-    console.log(input);
     input.value = 'site';
   });
 
