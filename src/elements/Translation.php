@@ -61,7 +61,7 @@ class Translation extends Element
 
   public static function hasTitles(): bool
   {
-    return true;
+    return false;
   }
 
   public static function hasUris(): bool
@@ -128,11 +128,7 @@ class Translation extends Element
 
   public function canSave(User $user): bool
   {
-    if (parent::canSave($user)) {
-      return true;
-    }
-    // todo: implement user permissions
-    return $user->can('saveTranslates');
+    return true;
   }
 
   public function canDuplicate(User $user): bool
@@ -156,9 +152,6 @@ class Translation extends Element
     return $exporters;
   }
 
-  /**
-   * @inheritdoc
-   */
   protected static function defineSources(string $context = null): array
   {
     $sources = [];
@@ -306,9 +299,6 @@ class Translation extends Element
     return $templateSources;
   }
 
-  /**
-   * @inheritdoc
-   */
   public static function indexHtml(ElementQueryInterface $elementQuery, array $disabledElementIds = null, array $viewState, string $sourceKey = null, string $context = null, bool $includeContainer, bool $showCheckboxes): string
   {
 
@@ -330,7 +320,7 @@ class Translation extends Element
     $attributes = Craft::$app->getElementSources()->getTableAttributes(static::class, $sourceKey);
     $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
     $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-    $trans = Craft::t('easy-translations', 'Translation') . ': ' . ucfirst($lang->displayName);
+    $trans = Craft::t('easy-translations', 'Translation') . ' - ' . ucfirst($lang->displayName);
     array_walk_recursive($attributes, function (&$attributes) use ($trans) {
       if ($attributes == Craft::t('easy-translations', 'Translation')) {
         $attributes = $trans;
@@ -346,7 +336,7 @@ class Translation extends Element
       'showCheckboxes' => $showCheckboxes,
     ];
 
-    Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%');");
+    Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%'); $('.checkbox-cell').remove(); $('table tbody tr:not(:last-child)').css('border-bottom', '2px solid rgba(96,125,159,.1)');");
 
     $template = '_elements/' . $viewState['mode'] . 'view/' . ($includeContainer ? 'container' : 'elements');
 
