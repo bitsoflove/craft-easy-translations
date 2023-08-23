@@ -24,6 +24,11 @@ class TranslationExport extends ElementExporter
         return Craft::t('easy-translations', 'Translations');
     }
 
+    public function getFilename(): string
+    {
+        return Craft::t('easy-translations', 'Translations') . '_' . date('Y-m-d_H:i:s');
+    }
+
     public function export(ElementQueryInterface $query): array
     {
         $results = [];
