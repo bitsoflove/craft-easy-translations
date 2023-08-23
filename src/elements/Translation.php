@@ -26,21 +26,11 @@ class Translation extends Element
     public $field;
     public $category;
 
-    /**
-     * Return element type name.
-     *
-     * @return string
-     */
     public function getName()
     {
         return Craft::t('easy-translations', 'Translations');
     }
 
-    /**
-     * Use the name as the string representation.
-     *
-     * @return string
-     */
     public function __toString()
     {
         try {
@@ -50,17 +40,11 @@ class Translation extends Element
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public static function isLocalized(): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
     public static function hasStatuses(): bool
     {
         return false;
@@ -71,9 +55,6 @@ class Translation extends Element
         return new TranslationQuery(get_called_class());
     }
 
-    /**
-     * @inheritdoc
-     */
     protected static function defineTableAttributes(): array
     {
         $attributes['source'] = ['label' => Craft::t('easy-translations', 'Source')];
@@ -83,33 +64,16 @@ class Translation extends Element
         return $attributes;
     }
 
-    /**
-     * Returns the default table attributes.
-     *
-     * @param string $source
-     *
-     * @return array
-     */
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return ['source', 'field'];
     }
 
-    /**
-     * Don't encode the attribute html.
-     *
-     * @param string           $attribute
-     *
-     * @return string
-     */
     protected function tableAttributeHtml(string $attribute): string
     {
         return $this->$attribute;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected static function defineSearchableAttributes(): array
     {
         return [
@@ -132,9 +96,6 @@ class Translation extends Element
         return $exporters;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected static function defineSources(string $context = null): array
     {
         $sources = [];
@@ -282,9 +243,6 @@ class Translation extends Element
         return $templateSources;
     }
 
-    /**
-     * @inheritdoc
-     */
     public static function indexHtml(ElementQueryInterface $elementQuery, array $disabledElementIds = null, array $viewState, string $sourceKey = null, string $context = null, bool $includeContainer, bool $showCheckboxes): string
     {
 
@@ -306,7 +264,7 @@ class Translation extends Element
         $attributes = Craft::$app->getElementIndexes()->getTableAttributes(static::class, $sourceKey);
         $site = Craft::$app->getSites()->getSiteById($elementQuery->siteId);
         $lang = Craft::$app->getI18n()->getLocaleById($site->language);
-        $trans = Craft::t('easy-translations', 'Translation') . ': ' . ucfirst($lang->displayName);
+        $trans = Craft::t('easy-translations', 'Translation') . ' - ' . ucfirst($lang->displayName);
         array_walk_recursive($attributes, function (&$attributes) use ($trans) {
             if ($attributes == Craft::t('easy-translations', 'Translation')) {
                 $attributes = $trans;
@@ -322,7 +280,7 @@ class Translation extends Element
             'showCheckboxes' => $showCheckboxes,
         ];
 
-        Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%');");
+        Craft::$app->view->registerJs("$('table.fullwidth thead th').css('width', '50%'); $('.checkbox-cell').remove(); $('table tbody tr:not(:last-child)').css('border-bottom', '2px solid rgba(96,125,159,.1)');");
 
         $template = '_elements/' . $viewState['mode'] . 'view/' . ($includeContainer ? 'container' : 'elements');
 

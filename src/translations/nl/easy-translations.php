@@ -20,7 +20,7 @@ return [
   'Something went wrong while saving the translations' => 'Er ging iets mis tijdens het opslaan van de vertalingen',
 
   'Translations' => 'Vertalingen',
-  'Source' => 'Source',
+  'Source' => 'Key',
   'Translation' => 'Vertaling',
   'Templates' => 'Templates',
   'All Templates' => 'Alle Templates',
