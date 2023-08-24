@@ -220,8 +220,8 @@ class Translation extends Element
       }
 
       foreach ($filesWithPermissions as $fileName) {
-        $sources['categoriessources:' . $fileName] = [
-          'label' => ucfirst($fileName),
+        $sources['categories:' . $fileName] = [
+          'label' => ucfirst(str_replace('-', ' ', $fileName)),
           'key' => "categories:" . $fileName,
           'criteria' => [
             'category' => $fileName
