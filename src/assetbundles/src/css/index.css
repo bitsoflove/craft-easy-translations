@@ -10,7 +10,7 @@
  * @since     1.0.0
  */
 
- th[data-title="Source"] .element {
+ table.data tbody th .element {
   user-select: auto;
   -webkit-user-select: auto;
  }
