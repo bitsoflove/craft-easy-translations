@@ -268,7 +268,7 @@ class TranslationService extends Component
         $translations = [];
 
         foreach ($result as $row) {
-            $translations[$row['message']] = $row['translation'];
+            $translations[urldecode($row['message'])] = urldecode($row['translation']);
         }
 
         return $translations;
@@ -297,12 +297,12 @@ class TranslationService extends Component
         $language = Craft::$app->getSites()->getSiteById($siteId)->language;
 
         foreach ($translations as $source => $translation) {
-            $oldSource = SourceRecord::findOne(['category' => $category, 'message' => $source]);
+            $oldSource = SourceRecord::findOne(['category' => $category, 'message' => urldecode($source)]);
 
             if ($oldSource == null) {
                 $oldSource = new SourceRecord;
                 $oldSource->category = $category;
-                $oldSource->message = $source;
+                $oldSource->message = urldecode($source);
                 $oldSource->insert();
             }
 
@@ -314,14 +314,14 @@ class TranslationService extends Component
                         $newTranslation = new TranslationRecord;
                         $newTranslation->id = $oldSource->id;
                         $newTranslation->language = $language;
-                        $newTranslation->translation = $translation;
+                        $newTranslation->translation = urldecode($translation);
                         $newTranslation->insert();
                     }
                 }
             } else {
                 if ($oldTranslation->translation != $translation) {
                     if (!empty($translation)) {
-                        $oldTranslation->translation = $translation;
+                        $oldTranslation->translation = urldecode($translation);
                         $oldTranslation->update();
                     } else {
                         $oldTranslation->delete();
