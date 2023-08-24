@@ -103,7 +103,7 @@ class Translation extends Element
 
         if($user->checkPermission('easy-translations-viewTemplates')) {
           $templateSources = self::getTemplateSources(Craft::$app->path->getSiteTemplatesPath());
-          sort($templateSources);
+          rsort($templateSources);
           $sources[] = ['heading' => Craft::t('easy-translations', 'Templates')];
 
           $sources[] = [
