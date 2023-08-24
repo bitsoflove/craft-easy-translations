@@ -95,12 +95,14 @@ class Translations extends Plugin
         UserPermissions::EVENT_REGISTER_PERMISSIONS,
         function(RegisterUserPermissionsEvent $event) {
           $nestedCategories = [];
-          $categories = array_slice(Translation::sources(), 3);
+          $categories = array_filter(Translation::sources(''), function ($value, $key) {
+            return str_starts_with($key, 'categories');
+          }, ARRAY_FILTER_USE_BOTH);
 
           foreach ($categories as $categorySource) {
             if (array_key_exists('key', $categorySource)) {
-              $nestedCategories['easy-translations-viewCategories:' . $categorySource['key']] = [
-                'label' => Craft::t('easy-translations', 'View {category}', ['category' => $categorySource['key']]),
+              $nestedCategories['easy-translations-viewCategories:' . explode(':', $categorySource['key'])[1]] = [
+                'label' => Craft::t('easy-translations', 'View {category}', ['category' => explode(':', $categorySource['key'])[1]]),
               ];
             }
           }
