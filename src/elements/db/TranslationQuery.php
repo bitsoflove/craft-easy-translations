@@ -17,7 +17,7 @@ use craft\elements\db\ElementQuery;
  */
 class TranslationQuery extends ElementQuery
 {
-    public $id;
+    public mixed $id;
     public $path;
     public $category;
 

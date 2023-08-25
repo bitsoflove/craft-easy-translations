@@ -17,11 +17,17 @@ use bitsoflove\translations\Translations;
 use bitsoflove\translations\elements\exporters\TranslationExport;
 use craft\helpers\FileHelper;
 
+/**
+ * @author    Bits of Love
+ * @package   craft-easy-translations
+ * @since     1.0.0
+ */
 class Translation extends Element
 {
-  public $translation;
-  public $field;
+  public string $translation; // Required to enable search on translation value
+  public $field; // The actual field template that gets rendered in the column
 
+  // This will be the name of the column header
   public static function displayName(): string
   {
     return Craft::t('easy-translations', 'Translations');
