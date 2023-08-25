@@ -31,9 +31,9 @@ class Translations extends Plugin
      */
     public static $plugin;
 
-    public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = false;
-    public bool $hasCpSection = true;
+    public $schemaVersion = '1.0.0';
+    public $hasCpSettings = false;
+    public $hasCpSection = true;
 
     public function init()
     {
