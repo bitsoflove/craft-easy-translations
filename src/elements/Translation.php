@@ -31,7 +31,7 @@ class Translation extends Element
   // This will be the name of the column header
   public static function displayName(): string
   {
-    return Craft::t('easy-translations', 'Source');
+    return Craft::t('easy-translations', 'Translation');
   }
 
   public static function lowerDisplayName(): string
