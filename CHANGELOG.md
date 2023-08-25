@@ -1,5 +1,5 @@
 # Easy Translations Changelog
 
-## 0.0.1 - 2022-04-27
+## 1.0.0 - 2023-08-25
 ### Added
 - Initial release
