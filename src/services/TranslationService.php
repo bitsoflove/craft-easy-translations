@@ -25,7 +25,7 @@ class TranslationService extends Component
 {
     private $_expressions = [];
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -62,7 +62,6 @@ class TranslationService extends Component
         }
 
         $translations = $this->filterTranslations($translations, $query);
-
         return $translations;
     }
 
@@ -145,7 +144,7 @@ class TranslationService extends Component
     {
         $sort = $query->orderBy;
 
-        if (array_key_first($sort) == 'source') {
+        if (array_key_first($sort) == 'title') {
             if (array_values($sort)[0] == 'asc') {
                 ksort($translations, 10);
             } else {
@@ -187,11 +186,11 @@ class TranslationService extends Component
 
                     $element = $this->createTranslateElement($source, $translation, $elementId);
 
-                    if ($query->search && !stristr($element->source, $query->search) && !stristr($element->translation, $query->search)) {
+                    if ($query->search && !stristr($element->title, $query->search) && !stristr($element->translation, $query->search)) {
                         continue;
                     }
 
-                    $translations[$element->source] = $element;
+                    $translations[$element->title] = $element;
                 }
             }
         }
@@ -201,10 +200,10 @@ class TranslationService extends Component
 
     private function createTranslateElement($source, $translation, $elementId)
     {
-        $translateId = ElementHelper::generateSlug($source);
+        $translateSlug = ElementHelper::generateSlug($source);
 
         $field = Craft::$app->getView()->renderTemplate('_includes/forms/text', [
-            'id' => $translateId,
+            'id' => $translateSlug,
             'name' => 'translation[' . $source . ']',
             'value' => $translation,
             'placeholder' => $translation,
@@ -212,8 +211,7 @@ class TranslationService extends Component
 
         $element = new Translation([
             'id' => $elementId,
-            'translateId' => $translateId,
-            'source' => $source,
+            'title' => $source,
             'translation' => $translation,
             'field' => $field,
         ]);
@@ -233,11 +231,11 @@ class TranslationService extends Component
 
             $element = $this->createTranslateElement($source, $translation, $elementId);
 
-            if ($query->search && !stristr($element->source, $query->search) && !stristr($element->translation, $query->search)) {
+            if ($query->search && !stristr($element->title, $query->search) && !stristr($element->translation, $query->search)) {
                 continue;
             }
 
-            $translations[$element->source] = $element;
+            $translations[$element->title] = $element;
         }
 
         return $translations;

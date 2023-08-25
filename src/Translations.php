@@ -43,7 +43,7 @@ class Translations extends Plugin
         $this->registerServices();
         $this->registerPermissions();
 
-        // Register CP routes
+        // Register Translation Controller Action
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,

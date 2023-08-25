@@ -7,6 +7,7 @@
 
 namespace bitsoflove\translations\elements\db;
 
+use Craft;
 use craft\elements\db\ElementQuery;
 
 /**
@@ -16,9 +17,6 @@ use craft\elements\db\ElementQuery;
  */
 class TranslationQuery extends ElementQuery
 {
-
-    // General - Properties
-    // =========================================================================
     public $id;
     public $path;
     public $category;
@@ -38,12 +36,14 @@ class TranslationQuery extends ElementQuery
     {
         $this->path = $value;
     }
-
-    /**
-     * @inheritdoc
-     */
     protected function beforePrepare(): bool
     {
+        // todo: join the `translates` table
+        // $this->joinElementTable('translates');
+
+        // todo: apply any custom query params
+        // ...
+
         return false;
     }
 }

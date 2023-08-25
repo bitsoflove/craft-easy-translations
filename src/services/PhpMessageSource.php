@@ -17,7 +17,7 @@ use bitsoflove\translations\Translations;
  */
 class PhpMessageSource extends \craft\i18n\PhpMessageSource
 {
-    protected function loadMessages($category, $language)
+    protected function loadMessages($category, $language): array
     {
         $translations = parent::loadMessages($category, $language);
 
