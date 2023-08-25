@@ -295,7 +295,14 @@ class TranslationService extends Component
         $language = Craft::$app->getSites()->getSiteById($siteId)->language;
 
         foreach ($translations as $source => $translation) {
-            $oldSource = SourceRecord::findOne(['category' => $category, 'message' => urldecode($source)]);
+            $sourceRecords = SourceRecord::findAll(['category' => $category, 'message' => urldecode($source)]);
+            // extra validation to make sure we get the correct (and case sensitive!!) record.
+            $oldSource = null;
+            foreach ($sourceRecords as $record) {
+              if ($source === $record->message) {
+                $oldSource = $record;
+              }
+            }
 
             if ($oldSource == null) {
                 $oldSource = new SourceRecord;
