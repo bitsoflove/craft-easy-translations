@@ -39,7 +39,7 @@ Translations saved in the database have priority over those in the static files.
 
 ## System Requirements
 
-- Craft 3
+- Craft 3.x
 
 ## Installation
 
