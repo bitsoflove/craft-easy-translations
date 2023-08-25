@@ -1,58 +1,55 @@
 # Easy Translations
 
-Plugin to manage translations. Export and import functionality.
+The Easy Translations plugin makes it easy to manage your site's static translations. With a clean overview of all used translations and support for Export/Import, you can quickly start translating all your sites! 
 
-## Requirements
+![repo-img](./resources/img/info-1.jpeg)
 
-Craft 3
+## Features
+- Easily view and update all static translations.
+- Summary off all static translations used in each file.
+- Saved translations will be stored in the database. No conflict between development and client.
+- Export translations to CSV, XML and JSON.
+- Import translations using CSV.
+- User rights to decide who can view what translations.
+- Sorting and searching to quickly find specific translations.
 
-## Installation
-
-To install the plugin, follow these instructions.
-
-0. Update your composer.json file and add the repo as a VCS
-
-```
-  "repositories":
-    {
-        "type": "vcs",
-        "url": "https://github.com/bitsoflove/craft-translator:dev-develop"
-    }
-```
-
-1. Open your terminal and go to your Craft project:
-
-```shell
-cd /path/to/project
-```
-
-2. Tell Composer to install the plugin
-
-```shell
-composer require bitsoflove/craft-translator
-```
-
-3. Install the plugin in craft
-
-In the Control Panel, go to Settings → Plugins and click the “Install” button for Translation.
-
-**or**
-
-```shell
-php craft plugin/install craft-translator
-```
 
 ## Usage
 
-### *Table*
-The table contains two columns. The first is a list of all the sources, the second are the translations (if they exist). The translations are based on the selected language in the top left multi-site menu. Changing site will result in the translations changing to the language of the selected site.
+### Main Translation Table
+The table on the main page of the plugin contains a list of all the sources (the keys) as defined in the static translation files.
 
-### *Sidebar*
-Depending on the what rights where given to the user, different content will be visible here.
+Next to the sources, in the second column, you can see and edit the translations. What translations you manage depends on the selected language/site in the top left multi-site menu.
 
-On the left of the page there is a list of all the template files. Selecting a template will result in only the translations contained in that file to be shown.
+### Sidebar
+Depending on the user's rights, different sections will be visible on the left of the main table.
 
-Beneath the template paths, there's a list of categories. These include all the translations contained in static translation files such as /translations/en/site.php
+#### Templates
 
-### *Logic*
-By default the translations will first be extracted from the static translation files. Changing and saving some translations will result in **only** the changed translations to be saved to the database. The database translations have priority over those in the static files. This means that admins have full control over translations without having to alter any file or code.
+A sorted list of all the template files containing one or more translation keys. This is particularly useful for developers, wanting to know exactly where a translation is being used.
+
+#### Categories
+
+Beneath the template paths, there's a list of categories. These include all the translations contained in static translation files such `app.php` and `site.php`.
+
+### Translation Logic
+By default the translations will first be extracted from the static translation files. Changing and saving some translations will result in **only** the altered translations to be saved to the database.
+
+Translations saved in the database have priority over those in the static files. This means that admins/clients have full control over static translations without having to alter any file or code. 
+
+## System Requirements
+
+- Craft 3
+
+## Installation
+
+To install this plugin, go to your Craft project and follow the instructions below.
+
+- Load the plugin via Composer:
+```shell
+composer require bitsoflove/craft-easy-translations -w
+```
+- Install the plugin in the Control Panel -> Settings -> Plugins. **Or** use the following command:
+```shell
+php craft plugin/install easy-translations
+```
