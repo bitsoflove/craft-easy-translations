@@ -1,0 +1,26 @@
+name: Feature Request
+description: Suggest an idea or improvement for this plugin
+title: ''
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to submit feature request! Please fill out the fields to the best of your knowledge.
+  - type: textarea
+    id: body
+    attributes:
+      label: Feature request
+      value: |
+        ### Is your feature request related to a problem? Please describe.
+
+
+        ### Describe the solution or improvement you'd like
+
+
+        ### Additional context
+
+
+    validations:
+      required: true
